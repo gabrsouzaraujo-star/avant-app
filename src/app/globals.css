@@ -56,35 +56,24 @@ body {
  * Redefinem o token --brand no escopo da secao, entao qualquer utilitario
  * (text-brand, bg-brand, border-brand) se adapta sozinho.
  *
- * PROVISORIO: cores chutadas a partir do segmento de cada marca. Substituir
- * pelos manuais de marca de Cao Veio, MedInfuse e Move Fitness.
+ * Valores reais: Cao Veio e MedInfuse saem do CSS dos sites das proprias
+ * redes; Move Fitness foi amostrado do logo no video institucional.
+ * Confirmar com os manuais de marca quando chegarem.
  */
 .tema-cao-veio {
-  --brand: #d9541e;
-  --brand-hover: #ec6a35;
-  --brand-foreground: #ffffff;
+  --brand: #b5843b;
+  --brand-hover: #cb9a4e;
+  --brand-foreground: #000000;
 }
 
 .tema-medinfuse {
-  --brand: #2aa9b8;
-  --brand-hover: #3fc0cf;
-  --brand-foreground: #00181c;
+  --brand: #d7b46b;
+  --brand-hover: #e7c883;
+  --brand-foreground: #16181d;
 }
 
 .tema-move-fitness {
-  --brand: #8b5cf6;
-  --brand-hover: #a279f8;
-  --brand-foreground: #ffffff;
-}
-
-/* Respeita quem pediu menos animacao — relevante para os videos de fundo. */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+  --brand: #f0d000;
+  --brand-hover: #ffe22e;
+  --brand-foreground: #16181d;
 }

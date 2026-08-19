@@ -58,7 +58,9 @@ export default function Home() {
                 className="group border-border hover:border-brand relative flex min-h-80 flex-col justify-end overflow-hidden rounded-xl border p-6 transition-colors"
               >
                 <VideoFundo
-                  descricao={`Imagem da rede ${franquia.nome}`}
+                  src={franquia.video?.src}
+                  poster={franquia.video?.poster}
+                  descricao={`Vídeo institucional da rede ${franquia.nome}`}
                   className="transition-transform duration-500 group-hover:scale-105"
                 />
 

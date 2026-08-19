@@ -135,6 +135,22 @@ O recorte `crop=360:202:0:219` pega a faixa central do vídeo vertical, onde
 fica a animação e a assinatura — **ajustar esses números se o master mudar de
 resolução**.
 
+## Vídeos das redes
+
+Cada card em "Nossas Redes" tem o vídeo institucional da marca em looping,
+com o pôster como fallback. Ficam em `public/videos/rede-<slug>.mp4`.
+
+Os masters vieram do Instagram em 720x1280 e **têm texto queimado na parte de
+baixo** (a partir de ~1,5s). Esse texto seria ilegível no tamanho do card e
+brigaria com o rótulo que já existe por cima, então o recorte
+`crop=720:510:0:235` descarta a faixa do texto e centraliza o logo:
+
+```bash
+ffmpeg -i master.mp4 -an -vf "crop=720:510:0:235" -c:v libx264 -crf 27 -preset slow -pix_fmt yuv420p -movflags +faststart public/videos/rede-<slug>.mp4
+```
+
+Os vídeos só baixam quando o card entra na tela.
+
 ### Acessibilidade e robustez
 
 - Com "reduzir movimento" ativado, o vídeo não toca: a pessoa vê direto o
