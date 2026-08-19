@@ -102,3 +102,44 @@ necessária.
 
 Consulte [`.env.example`](.env.example). O arquivo `.env.local` contém segredos
 e **não** deve ser versionado.
+
+## Abertura da home
+
+Ao abrir o site, o vídeo institucional roda **uma vez** e congela no quadro
+final com a assinatura da marca. O conteúdo (chamada e CTAs) entra depois.
+
+Os arquivos ficam em `public/videos/` e são gerados a partir do master
+`Avant Franquias(Abertura).mp4` (360x640, 7,8s):
+
+| Arquivo                  | Uso                                           |
+| ------------------------ | --------------------------------------------- |
+| `abertura-mobile.mp4`    | Vertical original, telas < 768px              |
+| `abertura-desktop.mp4`   | Recorte central 16:9, telas ≥ 768px           |
+| `abertura-final-*.webp`  | Quadro final em alta — é o que fica congelado |
+| `abertura-inicio-*.webp` | Poster, evita tela preta antes do play        |
+
+Só um vídeo é baixado por dispositivo. O áudio foi removido: autoplay exige
+mudo, então a faixa só ocuparia banda.
+
+Para regerar depois de receber um master novo:
+
+```bash
+ffmpeg -i master.mp4 -an -c:v libx264 -crf 26 -preset slow -pix_fmt yuv420p -movflags +faststart public/videos/abertura-mobile.mp4
+```
+
+```bash
+ffmpeg -i master.mp4 -an -vf "crop=360:202:0:219,hqdn3d=3:3:6:6,scale=960:540:flags=lanczos,unsharp=5:5:0.6:3:3:0.3" -c:v libx264 -crf 25 -preset slow -pix_fmt yuv420p -movflags +faststart public/videos/abertura-desktop.mp4
+```
+
+O recorte `crop=360:202:0:219` pega a faixa central do vídeo vertical, onde
+fica a animação e a assinatura — **ajustar esses números se o master mudar de
+resolução**.
+
+### Acessibilidade e robustez
+
+- Com "reduzir movimento" ativado, o vídeo não toca: a pessoa vê direto o
+  quadro final.
+- Se o autoplay for bloqueado, a abertura encerra na hora — o conteúdo nunca
+  fica refém de um vídeo que não vai tocar.
+- Há um botão "Pular" durante a reprodução.
+- Sem JavaScript, o quadro final e o conteúdo aparecem normalmente.

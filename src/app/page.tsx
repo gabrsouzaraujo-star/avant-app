@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AberturaAvant } from "@/components/abertura-avant";
 import { Cabecalho } from "@/components/cabecalho";
 import { CtaAnalise } from "@/components/cta-analise";
 import { MarcadorConteudo } from "@/components/marcador-conteudo";
@@ -11,26 +12,24 @@ export default function Home() {
     <>
       <Cabecalho />
 
-      {/* Abertura de impacto: video institucional ao fundo, nome da marca por cima. */}
-      <section className="relative flex min-h-svh items-center justify-center overflow-hidden px-6">
-        <VideoFundo descricao="Vídeo institucional da AVANT FRANCHISING" />
-
-        <div className="relative z-10 mx-auto max-w-4xl text-center">
-          <p className="text-brand font-mono text-xs tracking-[0.3em] uppercase">
-            Desde 2010
-          </p>
-
-          <h1 className="mt-6 text-5xl leading-[0.95] font-bold tracking-tight sm:text-7xl lg:text-8xl">
-            AVANT
-            <span className="text-brand mt-1 block">FRANCHISING</span>
+      {/*
+       * Abertura: o video institucional roda uma vez e congela na assinatura
+       * da marca. O h1 existe so para busca e leitores de tela — visualmente
+       * quem anuncia o nome e o proprio quadro final, com muito mais forca.
+       */}
+      <AberturaAvant>
+        <div className="mx-auto max-w-3xl text-center">
+          <h1 className="sr-only">
+            AVANT Consultoria &amp; Franchising — transformamos marcas em redes
+            de franquias lucrativas
           </h1>
 
-          <p className="text-muted mx-auto mt-8 max-w-2xl text-lg text-balance sm:text-xl">
+          <p className="mx-auto max-w-2xl text-lg text-balance sm:text-xl">
             Transformamos marcas em redes de franquias lucrativas — e operamos
             as nossas próprias.
           </p>
 
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <CtaAnalise>Análise de franqueabilidade</CtaAnalise>
             <Link
               href="#redes"
@@ -40,7 +39,7 @@ export default function Home() {
             </Link>
           </div>
         </div>
-      </section>
+      </AberturaAvant>
 
       {/* Portal das redes: cada uma leva para a propria pagina. */}
       <section id="redes" className="mx-auto max-w-6xl px-6 py-24">
@@ -97,7 +96,7 @@ export default function Home() {
 
           <MarcadorConteudo
             rotulo="Depoimentos e logos de imprensa"
-            detalhe="Seção “Veja o que eles dizem sobre nós” e a faixa “na mídia” do site atual"
+            detalhe="Seção do site atual com depoimentos e a faixa de imprensa"
             className="min-h-64"
           />
         </div>
