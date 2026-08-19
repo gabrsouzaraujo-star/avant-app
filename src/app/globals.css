@@ -3,50 +3,36 @@
 /*
  * Design tokens — AVANT FRANCHISING
  *
- * ATENÇÃO: a paleta abaixo é PROVISÓRIA. Substituir pelas cores oficiais
- * do manual de marca da AVANT assim que o cliente enviar. Todo o restante
- * do app referencia apenas os tokens, então trocar os valores aqui
- * atualiza a interface inteira.
+ * Valores extraidos do site atual (www2.avantfranquias.com.br): a marca e
+ * escura por padrao, com dourado como unica cor de destaque. Ainda nao
+ * temos o manual de marca oficial — ao recebe-lo, basta ajustar os valores
+ * abaixo, pois toda a interface consome apenas estes tokens.
+ *
+ * O site e dark-first: nao ha variante clara: o tema escuro E a marca.
  */
 
 :root {
-  --background: #ffffff;
-  --foreground: #16181d;
+  --background: #000000;
+  --foreground: #ffffff;
 
-  --surface: #f6f7f9;
-  --border: #e3e6ea;
-  --muted: #6b7280;
+  --surface: #1b1b1b;
+  --surface-raised: #242424;
+  --border: #2e2e2e;
+  --muted: #a1a1a1;
 
-  --brand: #0f2742;
-  --brand-foreground: #ffffff;
-  --brand-hover: #16385e;
+  --brand: #da8e1d;
+  --brand-foreground: #000000;
+  --brand-hover: #eda33a;
 
-  --accent: #c8a24a;
-  --accent-foreground: #16181d;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0b0d10;
-    --foreground: #ededed;
-
-    --surface: #14171c;
-    --border: #262b33;
-    --muted: #9aa1ac;
-
-    --brand: #3b6ea5;
-    --brand-foreground: #ffffff;
-    --brand-hover: #4a82bd;
-
-    --accent: #d9b968;
-    --accent-foreground: #16181d;
-  }
+  /* Sobreposicao usada para dar contraste ao texto sobre video/imagem. */
+  --overlay: rgb(0 0 0 / 0.62);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
   --color-border: var(--border);
   --color-muted: var(--muted);
 
@@ -54,14 +40,25 @@
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-hover: var(--brand-hover);
 
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
+  --color-overlay: var(--overlay);
 
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-poppins);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* Respeita quem pediu menos animacao — relevante para os videos de fundo. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
