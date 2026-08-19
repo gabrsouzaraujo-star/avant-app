@@ -170,6 +170,24 @@ ffmpeg -i mosaico.jpg -vf "crop=444:556:3:3" -c:v libwebp -quality 84 public/ima
 
 Os offsets seguem uma grade de 450x562 — repetir para as 9 células.
 
+## Equipe da rede
+
+A seção "Quem está por trás da rede" vem de `equipe` em
+`src/content/franquias.ts`. Hoje só a MedInfuse tem.
+
+Os retratos foram recortados dos cards de carrossel do cliente, onde a
+pessoa ocupa a metade direita e o texto a esquerda. **O texto não foi
+mantido dentro da imagem** — foi transcrito para HTML, então reflui em
+qualquer largura, é indexável e chega a leitores de tela:
+
+```bash
+ffmpeg -i card.jpg -vf "crop=490:653:590:130,scale=600:800:flags=lanczos" -c:v libwebp -quality 85 public/imagens/medinfuse-<pessoa>.webp
+```
+
+O card do Dr. Edir tem o texto avançando mais à direita e usa
+`crop=440:587:640:130`. Ao receber cards novos, conferir o recorte antes:
+o offset depende de onde o texto termina.
+
 ### Acessibilidade e robustez
 
 - Com "reduzir movimento" ativado, o vídeo não toca: a pessoa vê direto o

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Cabecalho } from "@/components/cabecalho";
 import { CtaAnalise } from "@/components/cta-analise";
+import { Equipe } from "@/components/equipe";
 import { Galeria } from "@/components/galeria";
 import { MarcadorConteudo } from "@/components/marcador-conteudo";
 import { Rodape } from "@/components/rodape";
@@ -119,6 +120,12 @@ export default async function PaginaFranquia({
       </section>
 
       <Galeria fotos={franquia.galeria} titulo="A casa por dentro" />
+
+      <Equipe
+        pessoas={franquia.equipe}
+        titulo="Quem está por trás da rede"
+        chamada="Por trás de cada unidade existe uma equipe multidisciplinar dedicada a protocolos, processos e crescimento."
+      />
 
       {franquia.apresentacao && (
         <VideoApresentacao apresentacao={franquia.apresentacao} />

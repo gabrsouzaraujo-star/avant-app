@@ -26,6 +26,14 @@ export type Apresentacao = {
   chamada: string;
 };
 
+/** Integrante da lideranca da rede. */
+export type Pessoa = {
+  nome: string;
+  papel: string;
+  bio: string;
+  foto: string;
+};
+
 export type Numero = {
   valor: string;
   rotulo: string;
@@ -50,6 +58,7 @@ export type Franquia = {
   numeros: Numero[];
   depoimentos: Depoimento[];
   galeria: Foto[];
+  equipe: Pessoa[];
   apresentacao?: Apresentacao;
 };
 
@@ -108,6 +117,7 @@ export const franquias: Franquia[] = [
         alt: "Coquetel autoral em taça coupe",
       },
     ],
+    equipe: [],
     apresentacao: {
       src: "/videos/cao-veio-convencao.mp4",
       poster: "/videos/cao-veio-convencao.webp",
@@ -123,7 +133,10 @@ export const franquias: Franquia[] = [
     descricao:
       "Especializada em terapias injetáveis e implantes subcutâneos para emagrecimento, hipertrofia e longevidade. Une medicina integrativa, tecnologia de ponta e acompanhamento médico para promover saúde e bem-estar duradouros.",
     tema: "tema-medinfuse",
-    parceiro: { nome: "Dr. Luiz Paulo", papel: "Mentor e sócio" },
+    parceiro: {
+      nome: "Dr. Edir Soccol Jr. e Dr. Felipe Balem",
+      papel: "Fundadores da MedInfuse",
+    },
     video: {
       src: "/videos/rede-medinfuse.mp4",
       poster: "/videos/rede-medinfuse.webp",
@@ -136,6 +149,51 @@ export const franquias: Franquia[] = [
     ],
     depoimentos: [],
     galeria: [],
+    equipe: [
+      {
+        nome: "Dr. Edir Soccol Jr.",
+        papel: "Fundador da MedInfuse",
+        bio: "Médico há mais de 23 anos, especialista em Medicina Esportiva e Ortopedia, com pós-graduação em Endocrinologia e Nutrologia. Professor universitário, mentor de médicos e palestrante. Na MedInfuse, atua no desenvolvimento dos protocolos médicos e na evolução científica da rede.",
+        foto: "/imagens/medinfuse-edir-soccol.webp",
+      },
+      {
+        nome: "Dr. Felipe Balem",
+        papel: "Fundador da MedInfuse",
+        bio: "Médico há mais de 10 anos, dedica sua atuação ao desenvolvimento de estratégias que unem medicina baseada em evidências, inovação e padronização assistencial. Na MedInfuse, responde pelos protocolos clínicos e pela evolução científica da rede.",
+        foto: "/imagens/medinfuse-felipe-balem.webp",
+      },
+      {
+        nome: "Dr. Luiz Paulo",
+        papel: "Sócio da MedInfuse",
+        bio: "Presidente da Associação Brasileira de Hormonologia, realizou fellowship na Universidade de Harvard e foi o primeiro médico brasileiro treinado pela HTCA (Hormone Therapy Center of America). Professor, palestrante internacional e mentor da rede.",
+        foto: "/imagens/medinfuse-luiz-paulo.webp",
+      },
+      {
+        nome: "Pricila Pavani",
+        papel: "Diretora executiva",
+        bio: "Farmacêutica, especialista em Análises Clínicas e administradora, com ampla experiência em liderança estratégica, estruturação de processos e experiência do paciente. Na MedInfuse, transforma excelência operacional em um modelo replicável para toda a rede.",
+        foto: "/imagens/medinfuse-pricila-pavani.webp",
+      },
+      {
+        nome: "Lucas Camargo",
+        papel: "Diretor de franquias",
+        bio: "Sócio-fundador da AVANT Franquias, acumula mais de 15 anos de experiência no setor, com mais de 200 marcas desenvolvidas e 2.000 unidades comercializadas em quatro países. Na MedInfuse, lidera a estratégia de crescimento e expansão nacional da marca.",
+        foto: "/imagens/medinfuse-lucas-camargo.webp",
+      },
+      {
+        nome: "Vitor Shin-Ike",
+        papel: "Diretor administrativo",
+        bio: "Engenheiro, empresário, franqueado e franqueador, participou da estruturação de diversas redes de franquias em diferentes segmentos. Na MedInfuse, fortalece os processos, o suporte e o crescimento sustentável da rede.",
+        foto: "/imagens/medinfuse-vitor-shin-ike.webp",
+      },
+    ],
+    apresentacao: {
+      src: "/videos/medinfuse-apresentacao.mp4",
+      poster: "/videos/medinfuse-apresentacao.webp",
+      titulo: "A rede por dentro",
+      chamada:
+        "Lucas Camargo, diretor de franquias, sobre o modelo da MedInfuse.",
+    },
   },
   {
     slug: "move-fitness",
@@ -158,6 +216,7 @@ export const franquias: Franquia[] = [
     ],
     depoimentos: [],
     galeria: [],
+    equipe: [],
   },
 ];
 
