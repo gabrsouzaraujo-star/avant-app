@@ -2,8 +2,22 @@
 
 Plataforma web da **AVANT FRANCHISING**.
 
-> **Status:** scaffold inicial. A stack está configurada e o projeto roda, mas o
-> escopo funcional (módulos e telas) ainda será definido com o cliente.
+> **Status:** estrutura navegável, aguardando conteúdo. As páginas existem e a
+> identidade visual está aplicada, mas os textos de negócio, números,
+> depoimentos, fotos e vídeos ainda não foram fornecidos pelo cliente — os
+> espaços aparecem marcados como "A preencher" na interface.
+
+## Arquitetura
+
+O site atende **dois públicos**:
+
+1. **Candidatos a franqueado** das redes próprias (Cão Véio, MedInfuse e Move
+   Fitness) — cada rede tem página própria em `/franquias/[slug]`.
+2. **Empresários que querem franquear a própria marca** — levados à Análise de
+   Franqueabilidade, o serviço de consultoria da AVANT.
+
+A home funciona como portal: abertura de impacto, acesso às três redes e o
+convite para a análise.
 
 ## Stack
 
@@ -54,11 +68,28 @@ A aplicação sobe em http://localhost:3000.
 
 ```
 src/
-  app/          Rotas, layouts e páginas (App Router)
-    globals.css Design tokens e estilos globais
-  lib/          Utilitários compartilhados
-public/         Arquivos estáticos
+  app/                      Rotas e páginas (App Router)
+    globals.css             Design tokens e acentos por rede
+    franquias/[slug]/       Página de cada rede
+  components/               Componentes de interface
+  content/franquias.ts      Conteúdo das 3 redes — editar aqui
+  lib/                      Utilitários compartilhados
+public/                     Arquivos estáticos (vídeos e imagens)
 ```
+
+## Como adicionar conteúdo
+
+Tudo que é texto, número ou depoimento das redes vive em
+[`src/content/franquias.ts`](src/content/franquias.ts) — não é preciso mexer em
+componente. Para o vídeo de fundo de uma rede, coloque o arquivo em `public/` e
+preencha o campo `video`:
+
+```ts
+video: { src: "/videos/cao-veio.mp4", poster: "/videos/cao-veio.jpg" }
+```
+
+O `poster` é obrigatório: é a imagem exibida antes do vídeo carregar, em
+conexões lentas e para quem ativou "reduzir movimento" no sistema.
 
 ## Identidade visual
 

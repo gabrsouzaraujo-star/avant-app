@@ -51,6 +51,32 @@ body {
   color: var(--foreground);
 }
 
+/*
+ * Acento proprio de cada rede — e o que da "peculiaridade" visual a cada uma.
+ * Redefinem o token --brand no escopo da secao, entao qualquer utilitario
+ * (text-brand, bg-brand, border-brand) se adapta sozinho.
+ *
+ * PROVISORIO: cores chutadas a partir do segmento de cada marca. Substituir
+ * pelos manuais de marca de Cao Veio, MedInfuse e Move Fitness.
+ */
+.tema-cao-veio {
+  --brand: #d9541e;
+  --brand-hover: #ec6a35;
+  --brand-foreground: #ffffff;
+}
+
+.tema-medinfuse {
+  --brand: #2aa9b8;
+  --brand-hover: #3fc0cf;
+  --brand-foreground: #00181c;
+}
+
+.tema-move-fitness {
+  --brand: #8b5cf6;
+  --brand-hover: #a279f8;
+  --brand-foreground: #ffffff;
+}
+
 /* Respeita quem pediu menos animacao — relevante para os videos de fundo. */
 @media (prefers-reduced-motion: reduce) {
   *,
