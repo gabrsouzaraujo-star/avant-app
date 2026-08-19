@@ -13,6 +13,19 @@ export type Depoimento = {
   papel: string;
 };
 
+export type Foto = {
+  src: string;
+  alt: string;
+};
+
+/** Video institucional com fala, tocado sob demanda (nao e fundo). */
+export type Apresentacao = {
+  src: string;
+  poster: string;
+  titulo: string;
+  chamada: string;
+};
+
 export type Numero = {
   valor: string;
   rotulo: string;
@@ -36,6 +49,8 @@ export type Franquia = {
   video?: { src: string; poster: string };
   numeros: Numero[];
   depoimentos: Depoimento[];
+  galeria: Foto[];
+  apresentacao?: Apresentacao;
 };
 
 export const franquias: Franquia[] = [
@@ -61,6 +76,44 @@ export const franquias: Franquia[] = [
       { valor: "6", rotulo: "Em implantação" },
     ],
     depoimentos: [],
+    galeria: [
+      {
+        src: "/imagens/cao-veio-1.webp",
+        alt: "Hambúrguer artesanal servido no pão brioche",
+      },
+      { src: "/imagens/cao-veio-2.webp", alt: "Drink autoral em copo baixo" },
+      {
+        src: "/imagens/cao-veio-3.webp",
+        alt: "Jalapeños recheados e gratinados",
+      },
+      {
+        src: "/imagens/cao-veio-4.webp",
+        alt: "Tostadas de camarão com microverdes",
+      },
+      {
+        src: "/imagens/cao-veio-5.webp",
+        alt: "Bolinhos empanados com maionese defumada",
+      },
+      { src: "/imagens/cao-veio-6.webp", alt: "Fritas com cheddar e bacon" },
+      {
+        src: "/imagens/cao-veio-7.webp",
+        alt: "Drink servido em taça, no ambiente do bar",
+      },
+      {
+        src: "/imagens/cao-veio-8.webp",
+        alt: "Tartare com gema e batata chips",
+      },
+      {
+        src: "/imagens/cao-veio-9.webp",
+        alt: "Coquetel autoral em taça coupe",
+      },
+    ],
+    apresentacao: {
+      src: "/videos/cao-veio-convencao.mp4",
+      poster: "/videos/cao-veio-convencao.webp",
+      titulo: "A rede por dentro",
+      chamada: "Bastidores da convenção de franqueados do Cão Véio.",
+    },
   },
   {
     slug: "medinfuse",
@@ -82,6 +135,7 @@ export const franquias: Franquia[] = [
       { valor: "+40", rotulo: "Protocolos validados" },
     ],
     depoimentos: [],
+    galeria: [],
   },
   {
     slug: "move-fitness",
@@ -103,6 +157,7 @@ export const franquias: Franquia[] = [
       { valor: "R$ 600 mil", rotulo: "Investimento inicial" },
     ],
     depoimentos: [],
+    galeria: [],
   },
 ];
 

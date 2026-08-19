@@ -3,8 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Cabecalho } from "@/components/cabecalho";
 import { CtaAnalise } from "@/components/cta-analise";
+import { Galeria } from "@/components/galeria";
 import { MarcadorConteudo } from "@/components/marcador-conteudo";
 import { Rodape } from "@/components/rodape";
+import { VideoApresentacao } from "@/components/video-apresentacao";
 import { VideoFundo } from "@/components/video-fundo";
 import { buscarFranquia, franquias } from "@/content/franquias";
 
@@ -115,6 +117,12 @@ export default async function PaginaFranquia({
           />
         )}
       </section>
+
+      <Galeria fotos={franquia.galeria} titulo="A casa por dentro" />
+
+      {franquia.apresentacao && (
+        <VideoApresentacao apresentacao={franquia.apresentacao} />
+      )}
 
       <section className="mx-auto max-w-6xl px-6 pb-24">
         <h2 className="text-3xl font-bold tracking-tight">

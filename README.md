@@ -151,6 +151,25 @@ ffmpeg -i master.mp4 -an -vf "crop=720:510:0:235" -c:v libx264 -crf 27 -preset s
 
 Os vídeos só baixam quando o card entra na tela.
 
+## Galeria e vídeo institucional
+
+Cada rede pode ter uma galeria de fotos (`galeria`) e um vídeo com fala
+(`apresentacao`) em `src/content/franquias.ts`. Hoje só o Cão Véio tem.
+
+O vídeo de apresentação **não** toca sozinho: tem áudio e conteúdo, então
+espera o clique. Antes disso só o pôster está na página — o arquivo, de
+alguns megabytes, nem começa a baixar.
+
+As fotos do Cão Véio vieram de um mosaico 3x3 publicado no Instagram
+(1350x1687). Foram fatiadas em 9 arquivos de 444x556, detectando as
+divisórias pela variação de pixel por linha e coluna:
+
+```bash
+ffmpeg -i mosaico.jpg -vf "crop=444:556:3:3" -c:v libwebp -quality 84 public/imagens/cao-veio-1.webp
+```
+
+Os offsets seguem uma grade de 450x562 — repetir para as 9 células.
+
 ### Acessibilidade e robustez
 
 - Com "reduzir movimento" ativado, o vídeo não toca: a pessoa vê direto o
