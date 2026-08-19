@@ -2,10 +2,10 @@
 
 Plataforma web da **AVANT FRANCHISING**.
 
-> **Status:** estrutura navegável, aguardando conteúdo. As páginas existem e a
-> identidade visual está aplicada, mas os textos de negócio, números,
-> depoimentos, fotos e vídeos ainda não foram fornecidos pelo cliente — os
-> espaços aparecem marcados como "A preencher" na interface.
+> **Status:** estrutura navegável, com conteúdo parcial. Cão Véio e MedInfuse
+> já têm textos, números e mídia; a Move Fitness só tem o básico. O que falta
+> aparece marcado como "A preencher" na interface — hoje, os depoimentos de
+> franqueados das três redes.
 
 ## Arquitetura
 
@@ -114,7 +114,7 @@ Os arquivos ficam em `public/videos/` e são gerados a partir do master
 | Arquivo                  | Uso                                           |
 | ------------------------ | --------------------------------------------- |
 | `abertura-mobile.mp4`    | Vertical original, telas < 768px              |
-| `abertura-desktop.mp4`   | Recorte central 16:9, telas ≥ 768px           |
+| `abertura-desktop.mp4`   | Recorte central 16:9 em 720p, telas ≥ 768px   |
 | `abertura-final-*.webp`  | Quadro final em alta — é o que fica congelado |
 | `abertura-inicio-*.webp` | Poster, evita tela preta antes do play        |
 
@@ -128,12 +128,17 @@ ffmpeg -i master.mp4 -an -c:v libx264 -crf 26 -preset slow -pix_fmt yuv420p -mov
 ```
 
 ```bash
-ffmpeg -i master.mp4 -an -vf "crop=360:202:0:219,hqdn3d=3:3:6:6,scale=960:540:flags=lanczos,unsharp=5:5:0.6:3:3:0.3" -c:v libx264 -crf 25 -preset slow -pix_fmt yuv420p -movflags +faststart public/videos/abertura-desktop.mp4
+ffmpeg -i master.mp4 -an -vf "crop=360:202:0:219,hqdn3d=0:0:5:9,scale=1280:720:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=5:5:1.0:5:5:0.5" -c:v libx264 -crf 22 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/videos/abertura-desktop.mp4
 ```
 
 O recorte `crop=360:202:0:219` pega a faixa central do vídeo vertical, onde
 fica a animação e a assinatura — **ajustar esses números se o master mudar de
 resolução**.
+
+O denoise é **só temporal** (`hqdn3d=0:0:5:9`): os dois primeiros valores,
+que controlam o espacial, ficam em zero de propósito. Denoise espacial antes
+de ampliar apaga o traço fino e deixa o resultado com cara de baixa
+resolução — foi exatamente o que aconteceu na primeira versão.
 
 ## Vídeos das redes
 
