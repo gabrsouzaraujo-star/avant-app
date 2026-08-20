@@ -148,6 +148,20 @@ do master (ele veio a 224 kbps); `hqdn3d=0:0:5:9` é denoise **só temporal**
 antes da ampliação; `cas` (contrast adaptive sharpen) afia sem criar halo,
 e rendeu bordas mais firmes que `unsharp` sozinho.
 
+O quadro congelado não sai de um frame só. Os últimos 30 quadros do master
+são estáticos — diferem entre si apenas 0,13 em 255, ou seja, é o mesmo
+desenho com ruído de compressão diferente por cima. Somando os 30
+(`tmix=frames=30`) o ruído cai por volta de 5x e sobra mais sinal real para
+ampliar. É por isso que a imagem que fica parada na tela é mais limpa que
+qualquer quadro isolado do vídeo.
+
+```bash
+ffmpeg -i master.mp4 -vf "select='between(n,205,234)',crop=360:240:0:201,tmix=frames=30,select='eq(n,29)',gradfun=strength=0.8:radius=16,scale=1920:1280:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=3:3:1.0:3:3:0.3,cas=strength=0.75" -frames:v 1 -c:v libwebp -quality 92 public/videos/abertura-final-desktop.webp
+```
+
+Não adianta encodar acima de 1920 de largura: o master tem 360 pixels reais,
+então resolução maior só aumenta o arquivo sem acrescentar detalhe.
+
 Testados e descartados: `xbr` serrilhou as diagonais; `nnedi` exige um
 arquivo de pesos que não acompanha o ffmpeg. Entre `lanczos`, `spline` e
 `bicubic` a diferença foi imperceptível. Entre CRF 18 e 22 também — daí o
