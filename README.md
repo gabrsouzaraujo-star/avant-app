@@ -110,44 +110,61 @@ final com a assinatura da marca. O conteúdo (chamada e CTAs) entra depois.
 Os arquivos ficam em `public/videos/` e são gerados a partir do master
 `Avant Franquias(Abertura).mp4` (360x640, 7,8s):
 
-| Arquivo                  | Uso                                              |
-| ------------------------ | ------------------------------------------------ |
-| `abertura-mobile.mp4`    | Vertical em 720x1280, telas < 768px              |
-| `abertura-desktop.mp4`   | 1080p, vertical centrado com laterais desfocadas |
-| `abertura-final-*.webp`  | Quadro final em alta — é o que fica congelado    |
-| `abertura-inicio-*.webp` | Poster, evita tela preta antes do play           |
+| Arquivo                  | Uso                                                |
+| ------------------------ | -------------------------------------------------- |
+| `abertura-mobile.mp4`    | Vertical em 720x1280, telas < 768px                |
+| `abertura-desktop.mp4`   | Recorte horizontal 3:2 em 1920x1280, telas ≥ 768px |
+| `abertura-final-*.webp`  | Quadro final em alta — é o que fica congelado      |
+| `abertura-inicio-*.webp` | Poster, evita tela preta antes do play             |
 
 Só um vídeo é baixado por dispositivo. O áudio foi removido: autoplay exige
 mudo, então a faixa só ocuparia banda.
 
-### Por que o desktop não recorta
+### O desktop é horizontal, em 3:2
 
-O master tem **360x640** — resolução muito baixa. O recorte central 16:9 usava
-só 360x202 pixels reais e precisava cobrir a largura toda da tela: uma
-ampliação de mais de **5x**, que nenhum filtro disfarça.
+O desktop usa um recorte horizontal do master vertical, ocupando a tela
+inteira. O arquivo sai em **1920x1280 (3:2)** e não em 16:9, de propósito:
 
-Hoje o desktop mostra o vídeo **vertical inteiro em altura cheia**, centrado,
-com as laterais preenchidas por uma cópia desfocada e escurecida dele mesmo.
-A coluna nítida amplia só **1,7x** — cerca de **3x mais informação real por
-pixel de tela**. O logo aparece menor, mas nítido em vez de borrado.
+Como o vídeo é mais **alto** que qualquer monitor comum, o `object-cover`
+sempre corta em cima e embaixo — onde só há fundo escuro — e **nunca nas
+laterais**, onde fica a assinatura. Em 16:9 o subtítulo perdia letras num
+monitor de 1440x900, virando "ONSULTORIA & FRANCHISING".
 
-Testei também upscalers de contorno: `xbr` deixou as diagonais serrilhadas e
-foi descartado; `nnedi` precisa de um arquivo de pesos que não acompanha o
-ffmpeg.
+| Tela      | Corte lateral | Corte vertical |
+| --------- | ------------- | -------------- |
+| 1366x768  | 0px           | 143px          |
+| 1440x900  | 0px           | 60px           |
+| 1920x1080 | 0px           | 200px          |
+| 2560x1440 | 0px           | 267px          |
+
+**Limite conhecido:** o master tem 360x640, então o recorte usa 360x240
+pixels reais esticados até 1920 — mais de 5x. É o teto desta fonte. Com um
+master em 1080x1920 o `deblock` e o `gradfun` podem sair e a nitidez sobe
+muito.
+
+Sobre a cadeia de filtros: `deblock` e `gradfun` limpam blocagem e banding
+do master (ele veio a 224 kbps); `hqdn3d=0:0:5:9` é denoise **só temporal**
+— os dois primeiros zeros desligam o espacial, que apagaria o traço fino
+antes da ampliação; `cas` (contrast adaptive sharpen) afia sem criar halo,
+e rendeu bordas mais firmes que `unsharp` sozinho.
+
+Testados e descartados: `xbr` serrilhou as diagonais; `nnedi` exige um
+arquivo de pesos que não acompanha o ffmpeg. Entre `lanczos`, `spline` e
+`bicubic` a diferença foi imperceptível. Entre CRF 18 e 22 também — daí o
+CRF 20, que dá margem para artefatos de movimento sem inflar o arquivo.
 
 Para regerar depois de receber um master novo:
 
 ```bash
-ffmpeg -i master.mp4 -an -vf "deblock=filter=weak:block=8,gradfun=strength=1.2:radius=16,hqdn3d=0:0:5:9,scale=720:1280:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=5:5:0.7:3:3:0.3" -c:v libx264 -crf 23 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/videos/abertura-mobile.mp4
+ffmpeg -i master.mp4 -an -vf "deblock=filter=weak:block=8,gradfun=strength=1.2:radius=16,hqdn3d=0:0:5:9,scale=720:1280:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=3:3:0.7:3:3:0.2,cas=strength=0.65" -c:v libx264 -crf 23 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/videos/abertura-mobile.mp4
 ```
 
 ```bash
-ffmpeg -i master.mp4 -an -filter_complex "[0:v]deblock=filter=weak:block=8,gradfun=strength=1.2:radius=16,split=2[bg][fg];[bg]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,gblur=sigma=60,eq=brightness=-0.30:saturation=0.65[bgb];[fg]hqdn3d=0:0:5:9,scale=-2:1080:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=5:5:0.7:3:3:0.3[fgs];[bgb][fgs]overlay=(W-w)/2:0" -c:v libx264 -crf 22 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/videos/abertura-desktop.mp4
+ffmpeg -i master.mp4 -an -vf "crop=360:240:0:201,deblock=filter=weak:block=8,gradfun=strength=1.2:radius=16,hqdn3d=0:0:5:9,scale=1920:1280:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=3:3:0.7:3:3:0.2,cas=strength=0.65" -c:v libx264 -crf 20 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/videos/abertura-desktop.mp4
 ```
 
-O `deblock` e o `gradfun` limpam artefatos de compressão do master — o fundo
-escuro dele tem blocagem e banding visíveis. **Com um master em 1080x1920
-esses dois filtros podem sair**, e o recorte horizontal volta a ser viável.
+O recorte `crop=360:240:0:201` centraliza a assinatura, que no master ocupa
+`y 254..389`. **Recalcular se o master mudar de resolução.**
 
 ## Vídeos das redes
 
