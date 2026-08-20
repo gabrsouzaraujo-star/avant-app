@@ -26,6 +26,15 @@ export type Apresentacao = {
   chamada: string;
 };
 
+/** Marco ou historia da rede: retrato + mensagem. */
+export type Destaque = {
+  titulo: string;
+  chamada: string;
+  paragrafos: string[];
+  foto: string;
+  alt: string;
+};
+
 /** Integrante da lideranca da rede. */
 export type Pessoa = {
   nome: string;
@@ -60,6 +69,7 @@ export type Franquia = {
   galeria: Foto[];
   equipe: Pessoa[];
   apresentacoes: Apresentacao[];
+  destaque?: Destaque;
 };
 
 export const franquias: Franquia[] = [
@@ -219,13 +229,20 @@ export const franquias: Franquia[] = [
       { valor: "R$ 600 mil", rotulo: "Investimento inicial" },
     ],
     depoimentos: [],
-    galeria: [
-      {
-        src: "/imagens/move-fitness-12-anos.webp",
-        alt: "Dupla de uniforme Move Fitness na campanha de 12 anos da rede — à direita, Alexandre Pato",
-      },
-    ],
+    galeria: [],
     equipe: [],
+    destaque: {
+      titulo: "12 anos de Move Fitness",
+      chamada:
+        "Há 12 anos, a Move Fitness cresce porque nunca caminhou sozinha.",
+      paragrafos: [
+        "Hoje, nossa gratidão é a todos que fazem parte dessa história: funcionários, professores, equipe, franqueados, parceiros e, principalmente, nossos alunos, que acreditam diariamente no nosso propósito.",
+        "Obrigado por vestirem a camisa, por confiarem no nosso trabalho e por fazerem da Move Fitness muito mais do que uma academia: uma família.",
+        "Que venham muitos anos de evolução, saúde e conquistas. Nosso muito obrigado a cada um de vocês!",
+      ],
+      foto: "/imagens/move-fitness-12-anos.webp",
+      alt: "Dupla de uniforme Move Fitness na campanha de 12 anos da rede — à direita, Alexandre Pato",
+    },
     apresentacoes: [
       {
         src: "/videos/move-fitness-apresentacao.mp4",

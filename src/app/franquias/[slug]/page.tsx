@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Cabecalho } from "@/components/cabecalho";
 import { CtaAnalise } from "@/components/cta-analise";
+import { Destaque } from "@/components/destaque";
 import { Equipe } from "@/components/equipe";
 import { Galeria } from "@/components/galeria";
 import { MarcadorConteudo } from "@/components/marcador-conteudo";
@@ -118,6 +119,8 @@ export default async function PaginaFranquia({
           />
         )}
       </section>
+
+      {franquia.destaque && <Destaque destaque={franquia.destaque} />}
 
       <Galeria fotos={franquia.galeria} titulo="A casa por dentro" />
 

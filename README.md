@@ -179,6 +179,25 @@ ffmpeg -i mosaico.jpg -vf "crop=444:556:3:3" -c:v libwebp -quality 84 public/ima
 
 Os offsets seguem uma grade de 450x562 — repetir para as 9 células.
 
+## Texto que vinha dentro de imagem
+
+Boa parte do material do cliente é arte de rede social com o texto **dentro
+do JPEG**. Em todos esses casos a regra aqui é a mesma: recortar a foto e
+**transcrever o texto para HTML**. Texto dentro de imagem não é indexado, não
+é lido por leitor de tela, não dá para copiar e fica ilegível no celular.
+
+Os campos que existem para isso:
+
+| Campo      | Uso                                                                  |
+| ---------- | -------------------------------------------------------------------- |
+| `equipe`   | Cards de perfil — retrato, cargo e bio                               |
+| `destaque` | Marco da rede — retrato + mensagem (ex.: os 12 anos da Move Fitness) |
+| `galeria`  | Fotos sem texto, só imagem                                           |
+
+Ao recortar, **conferir se sobrou informação para trás**: a arte quase sempre
+traz números e mensagens que precisam virar conteúdo, não ser descartados
+junto com o corte.
+
 ## Equipe da rede
 
 A seção "Quem está por trás da rede" vem de `equipe` em
