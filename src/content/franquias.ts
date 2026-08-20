@@ -59,7 +59,7 @@ export type Franquia = {
   depoimentos: Depoimento[];
   galeria: Foto[];
   equipe: Pessoa[];
-  apresentacao?: Apresentacao;
+  apresentacoes: Apresentacao[];
 };
 
 export const franquias: Franquia[] = [
@@ -118,12 +118,14 @@ export const franquias: Franquia[] = [
       },
     ],
     equipe: [],
-    apresentacao: {
-      src: "/videos/cao-veio-convencao.mp4",
-      poster: "/videos/cao-veio-convencao.webp",
-      titulo: "A rede por dentro",
-      chamada: "Bastidores da convenção de franqueados do Cão Véio.",
-    },
+    apresentacoes: [
+      {
+        src: "/videos/cao-veio-convencao.mp4",
+        poster: "/videos/cao-veio-convencao.webp",
+        titulo: "Convenção de franqueados",
+        chamada: "Bastidores do encontro da rede.",
+      },
+    ],
   },
   {
     slug: "medinfuse",
@@ -187,13 +189,14 @@ export const franquias: Franquia[] = [
         foto: "/imagens/medinfuse-vitor-shin-ike.webp",
       },
     ],
-    apresentacao: {
-      src: "/videos/medinfuse-apresentacao.mp4",
-      poster: "/videos/medinfuse-apresentacao.webp",
-      titulo: "A rede por dentro",
-      chamada:
-        "Lucas Camargo, diretor de franquias, sobre o modelo da MedInfuse.",
-    },
+    apresentacoes: [
+      {
+        src: "/videos/medinfuse-apresentacao.mp4",
+        poster: "/videos/medinfuse-apresentacao.webp",
+        titulo: "O modelo por dentro",
+        chamada: "Lucas Camargo, diretor de franquias, sobre a rede.",
+      },
+    ],
   },
   {
     slug: "move-fitness",
@@ -209,14 +212,34 @@ export const franquias: Franquia[] = [
       poster: "/videos/rede-move-fitness.webp",
     },
     numeros: [
+      { valor: "12 anos", rotulo: "De história" },
       { valor: "5", rotulo: "Unidades na rede" },
       // Do portal.avantfranquias.com.br/movefitness — confirmar antes de publicar.
       { valor: "34 meses", rotulo: "Payback médio" },
       { valor: "R$ 600 mil", rotulo: "Investimento inicial" },
     ],
     depoimentos: [],
-    galeria: [],
+    galeria: [
+      {
+        src: "/imagens/move-fitness-12-anos.webp",
+        alt: "Dupla de uniforme Move Fitness na campanha de 12 anos da rede — à direita, Alexandre Pato",
+      },
+    ],
     equipe: [],
+    apresentacoes: [
+      {
+        src: "/videos/move-fitness-apresentacao.mp4",
+        poster: "/videos/move-fitness-apresentacao.webp",
+        titulo: "A origem da rede",
+        chamada: "Alexandre Pato apresenta a Move Fitness.",
+      },
+      {
+        src: "/videos/move-fitness-bastidores.mp4",
+        poster: "/videos/move-fitness-bastidores.webp",
+        titulo: "Bastidores",
+        chamada: "Conversa na sede da rede.",
+      },
+    ],
   },
 ];
 

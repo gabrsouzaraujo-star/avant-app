@@ -2,10 +2,9 @@
 
 Plataforma web da **AVANT FRANCHISING**.
 
-> **Status:** estrutura navegável, com conteúdo parcial. Cão Véio e MedInfuse
-> já têm textos, números e mídia; a Move Fitness só tem o básico. O que falta
-> aparece marcado como "A preencher" na interface — hoje, os depoimentos de
-> franqueados das três redes.
+> **Status:** estrutura navegável, com conteúdo parcial. As três redes já têm
+> textos, números e mídia. O que falta aparece marcado como "A preencher" na
+> interface — hoje, os depoimentos de franqueados das três redes.
 
 ## Arquitetura
 
@@ -158,12 +157,17 @@ Os vídeos só baixam quando o card entra na tela.
 
 ## Galeria e vídeo institucional
 
-Cada rede pode ter uma galeria de fotos (`galeria`) e um vídeo com fala
-(`apresentacao`) em `src/content/franquias.ts`. Hoje só o Cão Véio tem.
+Cada rede pode ter uma galeria de fotos (`galeria`) e uma lista de vídeos com
+fala (`apresentacoes`) em `src/content/franquias.ts`. A Move Fitness tem
+dois; as outras, um.
 
-O vídeo de apresentação **não** toca sozinho: tem áudio e conteúdo, então
-espera o clique. Antes disso só o pôster está na página — o arquivo, de
-alguns megabytes, nem começa a baixar.
+Esses vídeos **não** tocam sozinhos: têm áudio e conteúdo, então esperam o
+clique. Antes disso só o pôster está na página — o arquivo, de alguns
+megabytes, nem começa a baixar.
+
+```bash
+ffmpeg -i master.mp4 -vf "scale=480:854:flags=lanczos" -c:v libx264 -crf 30 -preset slow -pix_fmt yuv420p -c:a aac -b:a 80k -movflags +faststart public/videos/<slug>-<nome>.mp4
+```
 
 As fotos do Cão Véio vieram de um mosaico 3x3 publicado no Instagram
 (1350x1687). Foram fatiadas em 9 arquivos de 444x556, detectando as

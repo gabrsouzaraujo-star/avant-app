@@ -7,7 +7,7 @@ import { Equipe } from "@/components/equipe";
 import { Galeria } from "@/components/galeria";
 import { MarcadorConteudo } from "@/components/marcador-conteudo";
 import { Rodape } from "@/components/rodape";
-import { VideoApresentacao } from "@/components/video-apresentacao";
+import { VideosApresentacao } from "@/components/videos-apresentacao";
 import { VideoFundo } from "@/components/video-fundo";
 import { buscarFranquia, franquias } from "@/content/franquias";
 
@@ -97,7 +97,7 @@ export default async function PaginaFranquia({
         <h2 className="text-3xl font-bold tracking-tight">Resultados</h2>
 
         {franquia.numeros.length > 0 ? (
-          <dl className="mt-10 grid gap-6 sm:grid-cols-3">
+          <dl className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {franquia.numeros.map((numero) => (
               <div
                 key={numero.rotulo}
@@ -127,9 +127,10 @@ export default async function PaginaFranquia({
         chamada="Por trás de cada unidade existe uma equipe multidisciplinar dedicada a protocolos, processos e crescimento."
       />
 
-      {franquia.apresentacao && (
-        <VideoApresentacao apresentacao={franquia.apresentacao} />
-      )}
+      <VideosApresentacao
+        apresentacoes={franquia.apresentacoes}
+        titulo="A rede por dentro"
+      />
 
       <section className="mx-auto max-w-6xl px-6 pb-24">
         <h2 className="text-3xl font-bold tracking-tight">

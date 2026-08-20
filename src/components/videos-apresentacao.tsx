@@ -4,27 +4,18 @@ import { useState } from "react";
 import type { Apresentacao } from "@/content/franquias";
 
 /**
- * Video institucional com fala.
+ * Videos institucionais com fala.
  *
- * Diferente do video de fundo, este tem audio e conteudo — entao nao toca
- * sozinho. Ate a pessoa clicar, so o poster esta na pagina: o arquivo
- * (alguns megabytes) nem comeca a baixar.
+ * Diferente do video de fundo, estes tem audio e conteudo — entao nao tocam
+ * sozinhos. Ate o clique so o poster esta na pagina: o arquivo, de alguns
+ * megabytes, nem comeca a baixar.
  */
-export function VideoApresentacao({
-  apresentacao,
-}: {
-  apresentacao: Apresentacao;
-}) {
+function CartaoVideo({ apresentacao }: { apresentacao: Apresentacao }) {
   const [tocando, setTocando] = useState(false);
 
   return (
-    <section className="mx-auto max-w-6xl px-6 pb-24">
-      <h2 className="text-3xl font-bold tracking-tight">
-        {apresentacao.titulo}
-      </h2>
-      <p className="text-muted mt-3 max-w-xl">{apresentacao.chamada}</p>
-
-      <div className="border-border bg-surface relative mx-auto mt-10 aspect-[9/16] max-w-sm overflow-hidden rounded-xl border">
+    <li>
+      <div className="border-border bg-surface relative aspect-[9/16] overflow-hidden rounded-xl border">
         {tocando ? (
           <video
             src={apresentacao.src}
@@ -57,6 +48,31 @@ export function VideoApresentacao({
           </button>
         )}
       </div>
+
+      <p className="mt-4 font-semibold">{apresentacao.titulo}</p>
+      <p className="text-muted mt-1 text-sm">{apresentacao.chamada}</p>
+    </li>
+  );
+}
+
+export function VideosApresentacao({
+  apresentacoes,
+  titulo,
+}: {
+  apresentacoes: Apresentacao[];
+  titulo: string;
+}) {
+  if (apresentacoes.length === 0) return null;
+
+  return (
+    <section className="mx-auto max-w-6xl px-6 pb-24">
+      <h2 className="text-3xl font-bold tracking-tight">{titulo}</h2>
+
+      <ul className="mx-auto mt-10 grid max-w-sm gap-8 sm:max-w-none sm:grid-cols-2 lg:grid-cols-3">
+        {apresentacoes.map((apresentacao) => (
+          <CartaoVideo key={apresentacao.src} apresentacao={apresentacao} />
+        ))}
+      </ul>
     </section>
   );
 }
