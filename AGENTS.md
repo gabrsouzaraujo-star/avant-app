@@ -34,3 +34,34 @@ propositalmente enxuto.
 ```bash
 npm run typecheck && npm run lint && npm run format:check
 ```
+
+## Fluxo de alteração
+
+O hot reload do Next.js pode corromper o cache `.next/` e devolver 500 ou
+ENOENT. Não confiar nele: a cada alteração, reiniciar limpo.
+
+1. **Matar** o dev server antes de editar
+2. **Editar** os arquivos
+3. **Limpar** o `.next`
+4. **Subir** o server
+5. **Verificar** HTTP 200 na rota alterada
+6. **Commitar** — só depois do 200
+7. **Avisar** em qual rota conferir
+
+Nesta máquina o Node não está no PATH, então use o caminho completo:
+
+```powershell
+Get-CimInstance Win32_Process -Filter "Name='node.exe'" | Where-Object { $_.CommandLine -like '*next*dev*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
+Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue
+& "C:\Program Files\nodejs\npm.cmd" run dev
+```
+
+## Commits
+
+Pequenos e frequentes, um por alteração verificada. Prefixo em inglês,
+descrição em português: `feat:`, `fix:`, `style:`, `refactor:`, `chore:`,
+`wip:`.
+
+**Nunca `git add .` ou `git add -A` sem revisar o que entra.** O repositório é
+público e `public/` guarda mídia pesada do cliente — cada versão de um binário
+fica no histórico para sempre.
