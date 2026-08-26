@@ -258,6 +258,146 @@ export const franquias: Franquia[] = [
       },
     ],
   },
+  {
+    slug: "don-kebab",
+    nome: "Don Kebab",
+    setor: "Gastronomia",
+    chamada: "Arab street food",
+    descricao:
+      "Comida árabe de rua servida em casa própria: kebab no espeto vertical, wraps montados na hora, falafel e porções. Fachada em neon, salão cheio e operação de balcão — o modelo nasceu em Curitiba e chegou a São José dos Campos em 2025.",
+    tema: "tema-don-kebab",
+    // Ele assina as campanhas de expansao da rede e aparece em todo o
+    // material oficial — confirmar com o cliente se ha sociedade.
+    parceiro: { nome: "Wanderlei Silva", papel: "Rosto da marca" },
+    video: {
+      src: "/videos/rede-don-kebab.mp4",
+      poster: "/videos/rede-don-kebab.webp",
+    },
+    numeros: [],
+    depoimentos: [],
+    galeria: [
+      {
+        src: "/imagens/don-kebab-1.webp",
+        alt: "Placa circular da Don Kebab na fachada, vista de baixo contra o céu",
+      },
+      {
+        src: "/imagens/don-kebab-2.webp",
+        alt: "Wrap recheado servido no papel, segurado à frente da câmera",
+      },
+      {
+        src: "/imagens/don-kebab-3.webp",
+        alt: "Brinde com chope no salão da unidade",
+      },
+      {
+        src: "/imagens/don-kebab-4.webp",
+        alt: "Três sócios diante do letreiro em neon da marca, dentro da loja",
+      },
+      {
+        src: "/imagens/don-kebab-5.webp",
+        alt: "Equipe da unidade reunida sob o letreiro em neon",
+      },
+      {
+        src: "/imagens/don-kebab-6.webp",
+        alt: "Noite de operação na calçada, com a fachada iluminada ao fundo",
+      },
+      {
+        src: "/imagens/don-kebab-7.webp",
+        alt: "Sócios em frente à unidade em noite de casa cheia",
+      },
+    ],
+    equipe: [],
+    destaque: {
+      titulo: "Por que investir em uma franquia DK?",
+      chamada:
+        "Crescer com o apoio de uma marca que já tem know how e experiência de mercado.",
+      paragrafos: [
+        "Investir em uma franquia é poder crescer com o apoio de uma marca que já tem know how e experiência de mercado, e conquistar clientes através de um cenário mais favorável.",
+        "Por meio de estratégias que já foram testadas na prática e que recebem o acompanhamento constante do franqueador. Resultados positivos, através de caminhos mais assertivos e eficientes.",
+      ],
+      foto: "/imagens/don-kebab-destaque.webp",
+      alt: "Wanderlei Silva com uma sacola da rede, sob o letreiro em neon da Don Kebab",
+    },
+    apresentacoes: [
+      {
+        src: "/videos/don-kebab-apresentacao.mp4",
+        poster: "/videos/don-kebab-apresentacao.webp",
+        titulo: "O produto por dentro",
+        chamada: "Do espeto ao balcão, a operação em movimento.",
+      },
+      {
+        src: "/videos/don-kebab-inauguracao.mp4",
+        poster: "/videos/don-kebab-inauguracao.webp",
+        titulo: "Casa cheia",
+        chamada: "Um giro pela unidade em noite de operação.",
+      },
+    ],
+  },
+  {
+    slug: "shogun-team",
+    nome: "Shogun Team",
+    setor: "Artes marciais",
+    chamada: "Do tatame ao ringue, estrutura de atleta",
+    descricao:
+      "Academia de artes marciais e MMA com estrutura completa: octógono, ringue oficial, tatame de competição, sacos, área de musculação e loja. A rede opera no Brasil e na Suíça, e é a casa do Shogun Fighting Championship.",
+    tema: "tema-shogun-team",
+    video: {
+      src: "/videos/rede-shogun-team.mp4",
+      poster: "/videos/rede-shogun-team.webp",
+    },
+    numeros: [],
+    depoimentos: [],
+    galeria: [
+      {
+        src: "/imagens/shogun-team-1.webp",
+        alt: "Recepção da academia, com cinturões expostos e o logo Shogun Team",
+      },
+      {
+        src: "/imagens/shogun-team-2.webp",
+        alt: "Tatame amplo com o octógono ao fundo",
+      },
+      {
+        src: "/imagens/shogun-team-3.webp",
+        alt: "Ringue oficial com o logo da equipe no centro da lona",
+      },
+      {
+        src: "/imagens/shogun-team-4.webp",
+        alt: "Sala de treino com a grade do octógono junto às janelas",
+      },
+      {
+        src: "/imagens/shogun-team-5.webp",
+        alt: "Área de musculação e condicionamento, ao lado do octógono",
+      },
+      {
+        src: "/imagens/shogun-team-6.webp",
+        alt: "Ringue visto do canto, com os sacos de pancada na parede",
+      },
+      {
+        src: "/imagens/shogun-team-7.webp",
+        alt: "Sala de espera com troféus, poltronas e o brasão na parede",
+      },
+      {
+        src: "/imagens/shogun-team-8.webp",
+        alt: "Luvas de MMA e bandagens da equipe em exposição",
+      },
+      {
+        src: "/imagens/shogun-team-9.webp",
+        alt: "Camiseta de equipe pendurada na parede da academia",
+      },
+      {
+        src: "/imagens/shogun-team-10.webp",
+        alt: "Parede com camisetas de equipes e lutadores, algumas autografadas",
+      },
+    ],
+    equipe: [],
+    apresentacoes: [
+      {
+        src: "/videos/shogun-team-apresentacao.mp4",
+        poster: "/videos/shogun-team-apresentacao.webp",
+        titulo: "A academia por dentro",
+        chamada: "Um giro completo pela estrutura da unidade.",
+      },
+    ],
+  },
 ];
 
 export function buscarFranquia(slug: string): Franquia | undefined {

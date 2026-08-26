@@ -47,10 +47,16 @@ export default function Home() {
           Nossas redes
         </h2>
         <p className="text-muted mt-3 max-w-xl">
-          Três marcas, três mercados. Conheça cada operação por dentro.
+          Cinco marcas, cinco mercados. Conheça cada operação por dentro.
         </p>
 
-        <ul className="mt-12 grid gap-6 md:grid-cols-3">
+        {/*
+         * As duas ultimas regras evitam o buraco na ultima linha: quando o
+         * ultimo card fica sozinho ou em dupla, ele se estica pelo que sobrou.
+         * Vale para qualquer quantidade de redes — nada a mexer ao adicionar
+         * a proxima.
+         */}
+        <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:[&>li:last-child:nth-child(2n+1)]:col-span-2 lg:[&>li:last-child:nth-child(3n+1)]:col-span-3 lg:[&>li:last-child:nth-child(3n+2)]:col-span-2">
           {franquias.map((franquia) => (
             <li key={franquia.slug} className={franquia.tema}>
               <Link

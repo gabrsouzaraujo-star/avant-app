@@ -10,16 +10,20 @@ export function Cabecalho() {
       >
         <Link
           href="/"
-          className="hover:text-brand text-sm font-bold tracking-[0.2em] uppercase transition-colors"
+          className="hover:text-brand shrink-0 text-sm font-bold tracking-[0.2em] uppercase transition-colors"
         >
           Avant
         </Link>
 
-        {/* Com quatro itens a linha nao cabe num celular estreito: em vez de
-            cortar, ela quebra e o ultimo item desce. */}
-        <ul className="text-muted flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-xs tracking-wide uppercase sm:gap-x-5">
+        {/*
+         * Sao seis destinos: num celular estreito eles nao cabem numa linha e
+         * quebrariam em tres. Ali a lista vira uma faixa que rola no dedo, com
+         * a mascara apagando a borda direita para mostrar que continua. A
+         * partir de `sm` tudo cabe e ela volta a ser uma linha comum.
+         */}
+        <ul className="text-muted flex min-w-0 flex-1 [scrollbar-width:none] items-center gap-x-4 overflow-x-auto [mask-image:linear-gradient(to_right,#000_85%,transparent)] text-xs tracking-wide uppercase sm:flex-wrap sm:justify-end sm:gap-x-5 sm:overflow-visible sm:[mask-image:none]">
           {franquias.map((franquia) => (
-            <li key={franquia.slug}>
+            <li key={franquia.slug} className="shrink-0">
               <Link
                 href={`/franquias/${franquia.slug}`}
                 className="hover:text-foreground transition-colors"
@@ -30,7 +34,7 @@ export function Cabecalho() {
           ))}
 
           {/* O podcast nao e uma rede: fica destacado, fora da sequencia. */}
-          <li>
+          <li className="shrink-0">
             <Link
               href="/avantcast"
               className="text-foreground hover:text-brand font-semibold transition-colors"

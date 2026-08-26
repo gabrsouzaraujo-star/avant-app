@@ -2,21 +2,25 @@
 
 Plataforma web da **AVANT FRANCHISING**.
 
-> **Status:** estrutura navegável, com conteúdo parcial. As três redes já têm
-> textos, números e mídia. O que falta aparece marcado como "A preencher" na
-> interface — hoje, os depoimentos de franqueados das três redes.
+> **Status:** estrutura navegável, com conteúdo parcial. As cinco redes já têm
+> textos e mídia. O que falta aparece marcado como "A preencher" na interface —
+> hoje, os depoimentos de franqueados das cinco redes e os números da Don Kebab
+> e da Shogun Team.
 
 ## Arquitetura
 
 O site atende **dois públicos**:
 
-1. **Candidatos a franqueado** das redes próprias (Cão Véio, MedInfuse e Move
-   Fitness) — cada rede tem página própria em `/franquias/[slug]`.
+1. **Candidatos a franqueado** das redes próprias (Cão Véio, MedInfuse, Move
+   Fitness, Don Kebab e Shogun Team) — cada rede tem página própria em
+   `/franquias/[slug]`.
 2. **Empresários que querem franquear a própria marca** — levados à Análise de
    Franqueabilidade, o serviço de consultoria da AVANT.
 
-A home funciona como portal: abertura de impacto, acesso às três redes e o
-convite para a análise.
+A home funciona como portal: abertura de impacto, acesso às redes e o convite
+para a análise. O portal preenche sozinho os buracos da última linha da grade:
+quando o último card fica sozinho ou em dupla, ele se estica pelo que sobrou —
+nada a mexer ao entrar a próxima rede.
 
 ## Stack
 
@@ -72,7 +76,7 @@ src/
     franquias/[slug]/       Página de cada rede
     avantcast/              Página do podcast
   components/               Componentes de interface
-  content/franquias.ts      Conteúdo das 3 redes — editar aqui
+  content/franquias.ts      Conteúdo das 5 redes — editar aqui
   content/avantcast.ts      Conteúdo do podcast — editar aqui
   lib/                      Utilitários compartilhados
 public/                     Arquivos estáticos (vídeos e imagens)
@@ -248,6 +252,20 @@ brigaria com o rótulo que já existe por cima, então o recorte
 ffmpeg -i master.mp4 -an -vf "crop=720:510:0:235" -c:v libx264 -crf 27 -preset slow -pix_fmt yuv420p -movflags +faststart public/videos/rede-<slug>.mp4
 ```
 
+Os masters da Don Kebab e da Shogun Team **não** têm texto queimado, então
+ficam verticais, sem recorte — só reescalados para 540x960:
+
+```bash
+ffmpeg -ss <inicio> -t 12 -i master.mp4 -an -vf "scale=540:960:flags=lanczos" -c:v libx264 -crf 30 -preset slow -pix_fmt yuv420p -movflags +faststart public/videos/rede-<slug>.mp4
+```
+
+**Recortar um master vertical em paisagem custa caro.** O mesmo arquivo aparece
+num card quase quadrado e na metade vertical do topo da página da rede; um
+recorte 3:2 vira zoom duplo nos dois lugares, porque o `object-cover` corta de
+novo por cima. Mantido vertical, o quadro chega inteiro na horizontal e o corte
+fica só em cima e embaixo. O recorte acima existe pelo texto queimado, não por
+preferência de formato.
+
 Os vídeos só baixam quando o card entra na tela.
 
 ## Galeria e vídeo institucional
@@ -353,3 +371,37 @@ ffmpeg -i original.jpg -vf "scale='min(1200,iw)':-2:flags=lanczos" -c:v libwebp 
 
 O avanço automático (5s) para quando o ponteiro está em cima do carrossel,
 quando algo ali dentro recebe foco e para quem pediu "reduzir movimento".
+
+## Don Kebab e Shogun Team
+
+As duas redes entraram a partir de material de redes sociais — fotos e vídeos
+das próprias marcas. O que vale registrar:
+
+**As artes de campanha vieram com texto queimado.** Cinco das nove imagens da
+Don Kebab eram posts com frase sobreposta. O texto foi transcrito para o
+`destaque` da rede em `src/content/franquias.ts` (é HTML de verdade: reflui,
+é indexável e chega a leitores de tela) e a foto entrou recortada, só a parte
+limpa:
+
+```bash
+ffmpeg -i arte.jpg -vf "crop=1080:790:0:290,scale=800:-2:flags=lanczos" -c:v libwebp -quality 84 -compression_level 6 public/imagens/don-kebab-1.webp
+```
+
+O offset muda conforme a frase esteja no topo ou na base — conferir antes.
+
+**Os acentos de marca saíram das fotos.** `--brand` de cada uma é o pixel mais
+saturado do letreiro em neon (Don Kebab, `#f5d401`) e do logo da academia
+(Shogun Team, `#f2760e`), medidos assim:
+
+```bash
+ffmpeg -i foto.jpg -vf "crop=600:260:380:60,scale=40:24" -f rawvideo -pix_fmt rgb24 - | xxd -p -c 3 | awk '{r=strtonum("0x" substr($0,1,2)); g=strtonum("0x" substr($0,3,2)); b=strtonum("0x" substr($0,5,2)); mx=(r>g?(r>b?r:b):(g>b?g:b)); mn=(r<g?(r<b?r:b):(g<b?g:b)); s=(mx>0)?(mx-mn)/mx:0; if(s*mx>best){best=s*mx; c=$0}} END{print "#" c}'
+```
+
+A média simples do recorte não serve: ela puxa para o fundo escuro e devolve
+um marrom. O critério acima (saturação × brilho) isola o traço do neon.
+
+**Números e depoimentos continuam vazios** nas duas. Não há fonte confiável
+para unidades em operação ou investimento — o marcador "A preencher" fica na
+página até o cliente enviar. O papel do Wanderlei Silva na Don Kebab está como
+"Rosto da marca", que é o que o material sustenta; **confirmar se há
+sociedade** antes de publicar.
