@@ -15,7 +15,9 @@ export function Cabecalho() {
           Avant
         </Link>
 
-        <ul className="text-muted flex items-center gap-5 text-xs tracking-wide uppercase">
+        {/* Com quatro itens a linha nao cabe num celular estreito: em vez de
+            cortar, ela quebra e o ultimo item desce. */}
+        <ul className="text-muted flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-xs tracking-wide uppercase sm:gap-x-5">
           {franquias.map((franquia) => (
             <li key={franquia.slug}>
               <Link
@@ -26,6 +28,16 @@ export function Cabecalho() {
               </Link>
             </li>
           ))}
+
+          {/* O podcast nao e uma rede: fica destacado, fora da sequencia. */}
+          <li>
+            <Link
+              href="/avantcast"
+              className="text-foreground hover:text-brand font-semibold transition-colors"
+            >
+              AvantCast
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>

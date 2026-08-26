@@ -70,8 +70,10 @@ src/
   app/                      Rotas e páginas (App Router)
     globals.css             Design tokens e acentos por rede
     franquias/[slug]/       Página de cada rede
+    avantcast/              Página do podcast
   components/               Componentes de interface
   content/franquias.ts      Conteúdo das 3 redes — editar aqui
+  content/avantcast.ts      Conteúdo do podcast — editar aqui
   lib/                      Utilitários compartilhados
 public/                     Arquivos estáticos (vídeos e imagens)
 ```
@@ -317,3 +319,37 @@ o offset depende de onde o texto termina.
   fica refém de um vídeo que não vai tocar.
 - Há um botão "Pular" durante a reprodução.
 - Sem JavaScript, o quadro final e o conteúdo aparecem normalmente.
+
+## AVANTCAST
+
+A página [`/avantcast`](src/app/avantcast/page.tsx) apresenta o podcast
+institucional: texto do cliente, botão para o canal no YouTube e um carrossel
+com fotos das gravações. O link no cabeçalho fica destacado — o podcast não é
+uma rede, então não entra na sequência das três marcas.
+
+Texto, link do canal e legendas das fotos vivem em
+[`src/content/avantcast.ts`](src/content/avantcast.ts).
+
+### O carrossel
+
+Quem troca de slide é o **scroll do próprio navegador** (`scroll-snap`), não
+um `transform`. Isso entrega de graça o arrasto com o dedo, o scroll lateral
+no trackpad e o comportamento certo para quem navega pelo teclado. O
+indicador escuta o evento de scroll, então o ponto aceso continua correto
+mesmo quando o slide muda sem passar pelos botões.
+
+O destino da navegação fica num `ref`, não no estado: com o scroll suave a
+viagem dura algumas centenas de milissegundos, e dois cliques seguidos pelo
+estado leriam o mesmo índice do render anterior — o segundo repetiria o
+primeiro salto em vez de avançar.
+
+Nenhuma das fotos é `lazy`: as próximas ficam fora da área visível do trilho
+e o avanço automático chegaria nelas antes de o carregamento começar. As
+fotos são convertidas com largura máxima de 1200px:
+
+```bash
+ffmpeg -i original.jpg -vf "scale='min(1200,iw)':-2:flags=lanczos" -c:v libwebp -quality 82 -compression_level 6 public/imagens/podcast-<nome>.webp
+```
+
+O avanço automático (5s) para quando o ponteiro está em cima do carrossel,
+quando algo ali dentro recebe foco e para quem pediu "reduzir movimento".

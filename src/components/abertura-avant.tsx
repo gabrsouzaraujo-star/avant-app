@@ -8,6 +8,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 
 type Estado = "tocando" | "fim";
@@ -25,24 +26,6 @@ function useHidratado() {
   return useSyncExternalStore(
     semInscricao,
     () => true,
-    () => false,
-  );
-}
-
-/** Acompanha uma media query sem sincronizar estado na mao. */
-function useMediaQuery(consulta: string) {
-  const inscrever = useCallback(
-    (avisar: () => void) => {
-      const mq = window.matchMedia(consulta);
-      mq.addEventListener("change", avisar);
-      return () => mq.removeEventListener("change", avisar);
-    },
-    [consulta],
-  );
-
-  return useSyncExternalStore(
-    inscrever,
-    () => window.matchMedia(consulta).matches,
     () => false,
   );
 }
