@@ -65,8 +65,8 @@ function useMediaQuery(consulta: string) {
  *    viraria uma faixa escura.
  * 3. Costura: `backdrop-blur` sobre a area de encontro, mascarado nas duas
  *    pontas, mais um brilho da cor da marca — e o que funde as imagens.
- * 4. Escurecimento da base e o conteudo (`children`), que entra depois que a
- *    abertura termina.
+ * 4. Veu de contraste e o conteudo (`children`), que entra no alto da tela
+ *    depois que a abertura termina.
  *
  * Nas mascaras `#000` nao e cor: mask-image so le o canal alfa, o preto e
  * apenas "opaco aqui".
@@ -108,7 +108,7 @@ export function AberturaAvant({ children }: { children: React.ReactNode }) {
   }, [fonte, terminou, encerrar]);
 
   return (
-    <section className="relative flex min-h-svh flex-col items-center justify-end overflow-hidden px-6 pb-16">
+    <section className="paisagem:justify-start paisagem:pt-28 relative flex min-h-svh flex-col items-center justify-end overflow-hidden px-6 pb-16">
       {/* Video: 65% da tela, mas desenhado ate 72% — a sobra fica escondida
           debaixo da parte ja opaca do retrato, entao a borda dura dele nunca
           aparece. */}
@@ -180,20 +180,24 @@ export function AberturaAvant({ children }: { children: React.ReactNode }) {
         aria-hidden="true"
       />
 
-      {/* Escurece a base para o conteudo manter contraste sobre a marca. */}
+      {/* Veu que da contraste ao conteudo: escurece o topo, onde ele fica, e a
+          base, que precisa morrer no preto da secao seguinte. O meio da tela
+          — a assinatura e o rosto — fica limpo. */}
       <div
         className={cn(
-          "from-background via-background/70 absolute inset-0 bg-gradient-to-t to-transparent transition-opacity duration-700",
+          "from-background/70 to-background/70 absolute inset-0 bg-gradient-to-b via-transparent transition-opacity duration-700",
           terminou ? "opacity-100" : "opacity-0",
         )}
         aria-hidden="true"
       />
 
-      {/* Lado a lado o conteudo se limita a faixa do video: o retrato fica
-          livre, sem texto atravessando o rosto. */}
+      {/* Conteudo centrado na pagina inteira, nao na faixa do video. Lado a
+          lado ele fica no alto, acima da assinatura. Empilhado continua
+          embaixo: la o topo e o rosto do retrato e o meio da tela e a
+          assinatura, entao a base e o unico espaco livre. */}
       <div
         className={cn(
-          "abertura-conteudo paisagem:w-[65%] paisagem:self-start relative z-10 w-full transition-all duration-700 ease-out",
+          "abertura-conteudo relative z-10 w-full transition-all duration-700 ease-out",
           terminou
             ? "translate-y-0 opacity-100"
             : "pointer-events-none translate-y-4 opacity-0",
@@ -206,7 +210,7 @@ export function AberturaAvant({ children }: { children: React.ReactNode }) {
         <button
           type="button"
           onClick={encerrar}
-          className="paisagem:right-[37%] absolute right-6 bottom-6 z-20 rounded-full border border-white/25 px-5 py-2 text-xs tracking-[0.15em] text-white/70 uppercase transition-colors hover:border-white/60 hover:text-white"
+          className="absolute right-6 bottom-6 z-20 rounded-full border border-white/25 px-5 py-2 text-xs tracking-[0.15em] text-white/70 uppercase transition-colors hover:border-white/60 hover:text-white"
         >
           Pular
         </button>

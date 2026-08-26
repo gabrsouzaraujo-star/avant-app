@@ -135,6 +135,17 @@ pontas (o desfoque que mistura as bordas) e um brilho difuso na cor da
 marca. O vídeo é desenhado até 72% da tela: a sobra fica escondida debaixo
 da parte já opaca do retrato, então a borda dura dele nunca aparece.
 
+### Onde entra a chamada
+
+Quando a abertura termina, a chamada e os CTAs sobem centrados na página
+inteira — não na faixa do vídeo. Lado a lado eles ficam **no alto**, acima da
+assinatura e sem alcançar o retrato. Empilhado continuam **embaixo**: ali o
+topo da tela é o rosto e o meio é a assinatura, então a base é o único
+espaço livre.
+
+O véu que dá contraste a eles escurece o topo e a base a 70% e deixa o meio
+limpo — é o que mantém a assinatura e o rosto visíveis por baixo.
+
 ### A divisão só fica lado a lado em tela larga
 
 A variante `paisagem` de `globals.css` (`min-aspect-ratio: 115/100`) decide o
