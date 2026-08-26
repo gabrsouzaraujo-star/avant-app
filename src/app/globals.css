@@ -1,6 +1,15 @@
 @import "tailwindcss";
 
 /*
+ * A abertura divide a tela em duas faixas: video e retrato. A divisao so fica
+ * lado a lado quando a tela e larga o bastante para a faixa do video continuar
+ * mais larga que alta — abaixo disso o `object-cover` comecaria a comer as
+ * laterais da assinatura, que sangra ate as bordas do master. Em qualquer
+ * outra proporcao as duas faixas ficam empilhadas.
+ */
+@custom-variant paisagem (@media (min-aspect-ratio: 115/100));
+
+/*
  * Design tokens — AVANT FRANCHISING
  *
  * Valores extraidos do site atual (www2.avantfranquias.com.br): a marca e

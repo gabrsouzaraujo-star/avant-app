@@ -104,41 +104,69 @@ e **não** deve ser versionado.
 
 ## Abertura da home
 
-Ao abrir o site, o vídeo institucional roda **uma vez** e congela no quadro
-final com a assinatura da marca. O conteúdo (chamada e CTAs) entra depois.
+Ao abrir o site a tela é dividida em duas faixas: **65% para o vídeo**
+institucional e **35% para o retrato** do sócio-fundador. O vídeo roda **uma
+vez** e congela no quadro final com a assinatura da marca; o conteúdo
+(chamada e CTAs) entra depois.
 
-Os arquivos ficam em `public/videos/` e são gerados a partir do master
-`Avant Franquias(Abertura).mp4` (360x640, 7,8s):
+Os arquivos de vídeo ficam em `public/videos/` e são gerados a partir do
+master `Avant Franquias(Abertura).mp4` (360x640, 7,8s). O retrato é
+`public/imagens/abertura-lucas-camargo.webp` (1188x1324).
 
-| Arquivo                  | Uso                                                |
-| ------------------------ | -------------------------------------------------- |
-| `abertura-mobile.mp4`    | Vertical em 720x1280, telas < 768px                |
-| `abertura-desktop.mp4`   | Recorte horizontal 3:2 em 1920x1280, telas ≥ 768px |
-| `abertura-final-*.webp`  | Quadro final em alta — é o que fica congelado      |
-| `abertura-inicio-*.webp` | Poster, evita tela preta antes do play             |
+| Arquivo                  | Uso                                             |
+| ------------------------ | ----------------------------------------------- |
+| `abertura-mobile.mp4`    | Vertical em 720x1280, faixas empilhadas         |
+| `abertura-desktop.mp4`   | Quase quadrado em 1276x1440, faixas lado a lado |
+| `abertura-final-*.webp`  | Quadro final em alta — é o que fica congelado   |
+| `abertura-inicio-*.webp` | Poster, evita tela preta antes do play          |
 
 Só um vídeo é baixado por dispositivo. O áudio foi removido: autoplay exige
 mudo, então a faixa só ocuparia banda.
 
-### O desktop é horizontal, em 3:2
+### A costura entre as duas faixas
 
-O desktop usa um recorte horizontal do master vertical, ocupando a tela
-inteira. O arquivo sai em **1920x1280 (3:2)** e não em 16:9, de propósito:
+A divisa não é uma linha: as duas imagens se fundem numa faixa de ~8% da
+tela. Quem desvanece é **só o retrato**, por cima do vídeo. Se as duas
+camadas se dissolvessem ao mesmo tempo, no meio da costura apareceria o
+fundo preto por baixo das duas e a junção viraria uma faixa escura.
 
-Como o vídeo é mais **alto** que qualquer monitor comum, o `object-cover`
-sempre corta em cima e embaixo — onde só há fundo escuro — e **nunca nas
-laterais**, onde fica a assinatura. Em 16:9 o subtítulo perdia letras num
-monitor de 1440x900, virando "ONSULTORIA & FRANCHISING".
+Por cima da costura ainda passam um `backdrop-blur` mascarado nas duas
+pontas (o desfoque que mistura as bordas) e um brilho difuso na cor da
+marca. O vídeo é desenhado até 72% da tela: a sobra fica escondida debaixo
+da parte já opaca do retrato, então a borda dura dele nunca aparece.
 
-| Tela      | Corte lateral | Corte vertical |
-| --------- | ------------- | -------------- |
-| 1366x768  | 0px           | 143px          |
-| 1440x900  | 0px           | 60px           |
-| 1920x1080 | 0px           | 200px          |
-| 2560x1440 | 0px           | 267px          |
+### A divisão só fica lado a lado em tela larga
 
-**Limite conhecido:** o master tem 360x640, então o recorte usa 360x240
-pixels reais esticados até 1920 — mais de 5x. É o teto desta fonte. Com um
+A variante `paisagem` de `globals.css` (`min-aspect-ratio: 115/100`) decide o
+arranjo, e o mesmo valor está em `TELA_DIVIDIDA` no componente — os dois
+precisam andar juntos, porque é ele que escolhe o arquivo de vídeo.
+
+| Proporção da tela | Arranjo                             | Vídeo     |
+| ----------------- | ----------------------------------- | --------- |
+| ≥ 115/100         | Vídeo à esquerda, retrato à direita | `desktop` |
+| < 115/100         | Retrato em cima, vídeo embaixo      | `mobile`  |
+
+Abaixo desse limite a faixa do vídeo ficaria mais alta que larga e o
+`object-cover` começaria a comer as **laterais** da assinatura, que sangra
+até as bordas do master. Empilhado isso não acontece: a faixa continua mais
+larga que o vídeo vertical, e o corte volta a ser em cima e embaixo, onde só
+há fundo escuro.
+
+### O desktop é quase quadrado, com margem à direita
+
+O recorte é `crop=360:480` — o dobro da altura real do recorte 3:2 que a
+faixa inteira usava antes, porque agora ele ocupa 65% da largura e não
+precisa mais ser panorâmico. É o ganho de nitidez mais barato que esta fonte
+permite.
+
+Depois do recorte vem `pad=425:480` + `fillborders=right=65:mode=smear`, que
+estica a coluna da borda e cria 65px de margem à direita. Sem ela a
+assinatura — que sangra até o limite do master — terminaria exatamente
+debaixo da costura, e o "T" de AVANT e o "G" de FRANCHISING sumiam sob o
+retrato.
+
+**Limite conhecido:** o master tem 360x640, então o recorte usa 360x480
+pixels reais esticados até 1276 — 3,5x. É o teto desta fonte. Com um
 master em 1080x1920 o `deblock` e o `gradfun` podem sair e a nitidez sobe
 muito.
 
@@ -156,11 +184,18 @@ ampliar. É por isso que a imagem que fica parada na tela é mais limpa que
 qualquer quadro isolado do vídeo.
 
 ```bash
-ffmpeg -i master.mp4 -vf "select='between(n,205,234)',crop=360:240:0:201,tmix=frames=30,select='eq(n,29)',gradfun=strength=0.8:radius=16,scale=1920:1280:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=3:3:1.0:3:3:0.3,cas=strength=0.75" -frames:v 1 -c:v libwebp -quality 92 public/videos/abertura-final-desktop.webp
+ffmpeg -i master.mp4 -vf "select='between(n,205,234)',crop=360:480:0:81,tmix=frames=30,select='eq(n,29)',pad=425:480:0:0,fillborders=right=65:mode=smear,gradfun=strength=0.8:radius=16,scale=1276:1440:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=3:3:1.0:3:3:0.3,cas=strength=0.75" -frames:v 1 -c:v libwebp -quality 92 public/videos/abertura-final-desktop.webp
 ```
 
-Não adianta encodar acima de 1920 de largura: o master tem 360 pixels reais,
-então resolução maior só aumenta o arquivo sem acrescentar detalhe.
+O poster sai do primeiro quadro, com a mesma geometria:
+
+```bash
+ffmpeg -i master.mp4 -vf "select='eq(n,0)',crop=360:480:0:81,pad=425:480:0:0,fillborders=right=65:mode=smear,gradfun=strength=1.2:radius=16,scale=1276:1440:flags=lanczos+accurate_rnd+full_chroma_int" -frames:v 1 -c:v libwebp -quality 80 public/videos/abertura-inicio-desktop.webp
+```
+
+Não adianta encodar acima de 1276 de largura: o master tem 425 pixels reais
+depois da margem, então resolução maior só aumenta o arquivo sem acrescentar
+detalhe.
 
 Testados e descartados: `xbr` serrilhou as diagonais; `nnedi` exige um
 arquivo de pesos que não acompanha o ffmpeg. Entre `lanczos`, `spline` e
@@ -174,11 +209,17 @@ ffmpeg -i master.mp4 -an -vf "deblock=filter=weak:block=8,gradfun=strength=1.2:r
 ```
 
 ```bash
-ffmpeg -i master.mp4 -an -vf "crop=360:240:0:201,deblock=filter=weak:block=8,gradfun=strength=1.2:radius=16,hqdn3d=0:0:5:9,scale=1920:1280:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=3:3:0.7:3:3:0.2,cas=strength=0.65" -c:v libx264 -crf 20 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/videos/abertura-desktop.mp4
+ffmpeg -i master.mp4 -an -vf "crop=360:480:0:81,pad=425:480:0:0,fillborders=right=65:mode=smear,deblock=filter=weak:block=8,gradfun=strength=1.2:radius=16,hqdn3d=0:0:5:9,scale=1276:1440:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=3:3:0.7:3:3:0.2,cas=strength=0.65" -c:v libx264 -crf 20 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/videos/abertura-desktop.mp4
 ```
 
-O recorte `crop=360:240:0:201` centraliza a assinatura, que no master ocupa
+O recorte `crop=360:480:0:81` centraliza a assinatura, que no master ocupa
 `y 254..389`. **Recalcular se o master mudar de resolução.**
+
+O retrato entra sem tratamento, só convertido:
+
+```bash
+ffmpeg -i retrato.jpeg -c:v libwebp -quality 88 -compression_level 6 public/imagens/abertura-lucas-camargo.webp
+```
 
 ## Vídeos das redes
 
