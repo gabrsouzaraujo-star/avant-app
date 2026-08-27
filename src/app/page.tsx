@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { AberturaAvant } from "@/components/abertura-avant";
+import { BotaoCanal } from "@/components/botao-canal";
 import { Cabecalho } from "@/components/cabecalho";
+import { Carrossel } from "@/components/carrossel";
 import { CtaAnalise } from "@/components/cta-analise";
 import { MarcadorConteudo } from "@/components/marcador-conteudo";
 import { Rodape } from "@/components/rodape";
 import { VideoFundo } from "@/components/video-fundo";
+import { avantcast } from "@/content/avantcast";
 import { franquias } from "@/content/franquias";
 
 export default function Home() {
@@ -85,6 +88,45 @@ export default function Home() {
             </li>
           ))}
         </ul>
+      </section>
+
+      {/*
+       * AVANTCAST: o conteudo que mostra as redes por dentro. Entra depois do
+       * portal e antes do funil de consultoria — quem chegou ate aqui ja viu
+       * as marcas e e a hora de mostrar a conversa que existe por tras delas.
+       */}
+      <section className="border-border border-t px-6 py-24">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <div>
+            <p className="text-brand font-mono text-xs tracking-[0.3em] uppercase">
+              Podcast
+            </p>
+
+            <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+              {avantcast.nome}
+            </h2>
+
+            <p className="mt-4 text-xl font-semibold text-balance">
+              {avantcast.chamada}
+            </p>
+
+            <p className="text-muted mt-4 leading-relaxed">
+              {avantcast.paragrafos[0]}
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <BotaoCanal href={avantcast.canal} />
+              <Link
+                href="/avantcast"
+                className="border-border hover:border-foreground rounded-full border px-8 py-4 text-sm font-semibold tracking-wide uppercase transition-colors"
+              >
+                Conheça o AvantCast
+              </Link>
+            </div>
+          </div>
+
+          <Carrossel fotos={avantcast.fotos} />
+        </div>
       </section>
 
       {/* Segundo funil: empresarios que querem franquear a propria marca. */}

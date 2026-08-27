@@ -8,7 +8,7 @@ import { Equipe } from "@/components/equipe";
 import { Galeria } from "@/components/galeria";
 import { MarcadorConteudo } from "@/components/marcador-conteudo";
 import { Rodape } from "@/components/rodape";
-import { VideosApresentacao } from "@/components/videos-apresentacao";
+import { VideosImersivos } from "@/components/videos-imersivos";
 import { VideoFundo } from "@/components/video-fundo";
 import { buscarFranquia, franquias } from "@/content/franquias";
 
@@ -130,7 +130,7 @@ export default async function PaginaFranquia({
         chamada="Por trás de cada unidade existe uma equipe multidisciplinar dedicada a protocolos, processos e crescimento."
       />
 
-      <VideosApresentacao
+      <VideosImersivos
         apresentacoes={franquia.apresentacoes}
         titulo="A rede por dentro"
       />

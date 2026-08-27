@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 const INTERVALO_MS = 5000;
 
 /**
- * Carrossel de fotos.
+ * Carrossel de fotos, em looping infinito.
  *
  * A troca de slide e feita pelo proprio scroll do navegador (`scroll-snap`),
  * nao por transform. Isso da de graca o arrasto com o dedo, o scroll lateral
@@ -17,8 +17,11 @@ const INTERVALO_MS = 5000;
  * e o indicador continua correto mesmo quando o slide muda sem passar pelos
  * botoes, porque quem manda no estado e o evento de scroll.
  *
- * O avanco automatico para quando o ponteiro esta em cima, quando algo ali
- * dentro recebe foco e para quem pediu "reduzir movimento".
+ * O looping vem de uma segunda copia das fotos no fim do trilho. Passar da
+ * ultima e entrar nessa copia — que e identica —, e nao voltar correndo para
+ * o comeco. A volta ao inicio real acontece depois, num salto instantaneo
+ * feito **antes** da proxima animacao, quando a tela ja mostra a foto certa e
+ * ninguem ve nada mudar.
  */
 export function Carrossel({ fotos }: { fotos: FotoPodcast[] }) {
   const trilhoRef = useRef<HTMLUListElement>(null);
@@ -33,28 +36,54 @@ export function Carrossel({ fotos }: { fotos: FotoPodcast[] }) {
   const alvoRef = useRef(0);
 
   const semMovimento = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const total = fotos.length;
+
+  /** Posiciona sem animar. E o que torna a emenda do looping invisivel. */
+  const saltarPara = useCallback((indice: number) => {
+    const trilho = trilhoRef.current;
+    if (!trilho) return;
+
+    alvoRef.current = indice;
+    trilho.scrollTo({ left: indice * trilho.clientWidth, behavior: "auto" });
+  }, []);
 
   const irPara = useCallback(
     (indice: number) => {
       const trilho = trilhoRef.current;
       if (!trilho) return;
 
-      // Resto que aceita negativo: passar do ultimo volta ao primeiro e
-      // vice-versa.
-      const destino = ((indice % fotos.length) + fotos.length) % fotos.length;
-      alvoRef.current = destino;
-
+      alvoRef.current = indice;
       trilho.scrollTo({
-        left: destino * trilho.clientWidth,
+        left: indice * trilho.clientWidth,
         behavior: semMovimento ? "auto" : "smooth",
       });
     },
-    [fotos.length, semMovimento],
+    [semMovimento],
   );
 
+  /**
+   * Anda `passo` slides, atravessando a emenda quando precisa.
+   *
+   * A normalizacao acontece aqui, **antes** de animar: se ja estamos na copia,
+   * o salto para o slide equivalente do inicio nao muda nada na tela — as duas
+   * posicoes mostram a mesma foto — e a animacao seguinte parte de um ponto
+   * com folga dos dois lados.
+   */
   const avancar = useCallback(
-    (passo: number) => irPara(alvoRef.current + passo),
-    [irPara],
+    (passo: number) => {
+      let origem = alvoRef.current;
+
+      if (origem >= total) {
+        origem -= total;
+        saltarPara(origem);
+      } else if (origem + passo < 0) {
+        origem += total;
+        saltarPara(origem);
+      }
+
+      irPara(origem + passo);
+    },
+    [total, irPara, saltarPara],
   );
 
   // Quem manda no indicador e o scroll, nao o clique: assim o ponto aceso
@@ -66,7 +95,7 @@ export function Carrossel({ fotos }: { fotos: FotoPodcast[] }) {
     const aoRolar = () => {
       const posicao = trilho.scrollLeft / trilho.clientWidth;
       const indice = Math.round(posicao);
-      setAtual(indice);
+      setAtual(indice % total);
 
       // So aceita a posicao como alvo quando ela assentou num slide. No meio
       // de uma animacao os valores intermediarios roubariam o destino.
@@ -75,16 +104,23 @@ export function Carrossel({ fotos }: { fotos: FotoPodcast[] }) {
 
     trilho.addEventListener("scroll", aoRolar, { passive: true });
     return () => trilho.removeEventListener("scroll", aoRolar);
-  }, []);
+  }, [total]);
 
   useEffect(() => {
-    if (pausado || semMovimento || fotos.length < 2) return;
+    if (pausado || semMovimento || total < 2) return;
 
     const id = setInterval(() => avancar(1), INTERVALO_MS);
     return () => clearInterval(id);
-  }, [pausado, semMovimento, fotos.length, avancar]);
+  }, [pausado, semMovimento, total, avancar]);
 
-  if (fotos.length === 0) return null;
+  if (total === 0) return null;
+
+  // A copia so existe para o olho: para quem navega por leitor de tela ela
+  // seria a mesma lista contada duas vezes.
+  const slides = [
+    ...fotos.map((foto) => ({ foto, copia: false })),
+    ...fotos.map((foto) => ({ foto, copia: true })),
+  ];
 
   return (
     <div
@@ -103,17 +139,18 @@ export function Carrossel({ fotos }: { fotos: FotoPodcast[] }) {
         // navegacao continua funcionando no dedo e no trackpad.
         className="border-border flex snap-x snap-mandatory [scrollbar-width:none] overflow-x-auto rounded-xl border"
       >
-        {fotos.map((foto, indice) => (
+        {slides.map(({ foto, copia }, indice) => (
           <li
-            key={foto.src}
+            key={`${foto.src}-${copia ? "copia" : "original"}`}
             className="w-full shrink-0 snap-center"
             aria-roledescription="slide"
-            aria-label={`${indice + 1} de ${fotos.length}`}
+            aria-label={`${(indice % total) + 1} de ${total}`}
+            aria-hidden={copia || undefined}
           >
             <figure className="relative">
               <Image
                 src={foto.src}
-                alt={foto.alt}
+                alt={copia ? "" : foto.alt}
                 width={1200}
                 height={1200}
                 sizes="(min-width: 1024px) 45vw, 100vw"
@@ -143,8 +180,8 @@ export function Carrossel({ fotos }: { fotos: FotoPodcast[] }) {
           <li key={foto.src}>
             <button
               type="button"
-              onClick={() => irPara(indice)}
-              aria-label={`Ver foto ${indice + 1} de ${fotos.length}`}
+              onClick={() => avancar(indice - (alvoRef.current % total))}
+              aria-label={`Ver foto ${indice + 1} de ${total}`}
               aria-current={indice === atual}
               className={cn(
                 "block h-2 rounded-full transition-all",

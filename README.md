@@ -274,13 +274,44 @@ Cada rede pode ter uma galeria de fotos (`galeria`) e uma lista de vídeos com
 fala (`apresentacoes`) em `src/content/franquias.ts`. A Move Fitness tem
 dois; as outras, um.
 
-Esses vídeos **não** tocam sozinhos: têm áudio e conteúdo, então esperam o
-clique. Antes disso só o pôster está na página — o arquivo, de alguns
-megabytes, nem começa a baixar.
+### Eles tocam dentro da página, não num player
+
+Não há moldura, botão de play no meio da tela nem controles de vídeo: o
+arquivo começa quando a rolagem chega nele (55% visível) e para quando sai.
+As bordas se dissolvem no fundo — duas máscaras cruzadas com
+`mask-composite: intersect` apagam os quatro lados — e um brilho da cor da
+rede passa por trás. É o que tira dele o ar de mídia colada no site.
+
+**Começar mudo não é escolha, é a regra dos navegadores:** autoplay com som é
+bloqueado. Como esses vídeos têm fala, o botão de som fica sempre visível, e
+o som toca em um de cada vez — ligar num palco cala os outros. Junto dele há
+um botão de pausa: conteúdo que se move sozinho por mais de cinco segundos
+precisa de controle.
+
+O arquivo entra na fila 600px antes de aparecer e só então recebe o `src`,
+para não competir com o carregamento inicial da página.
+
+### Qualidade dos arquivos
+
+Todos foram refeitos a partir dos masters, em **720x1280**. Quando o master
+cabe no site, o stream é copiado sem recodificar — é o teto de qualidade
+possível, sem perda de geração:
 
 ```bash
-ffmpeg -i master.mp4 -vf "scale=480:854:flags=lanczos" -c:v libx264 -crf 30 -preset slow -pix_fmt yuv420p -c:a aac -b:a 80k -movflags +faststart public/videos/<slug>-<nome>.mp4
+ffmpeg -i master.mp4 -c copy -movflags +faststart public/videos/<slug>-<nome>.mp4
 ```
+
+A exceção é a convenção do Cão Véio: 2 minutos de master dariam 25 MB. Ela
+sai recodificada, e o CRF é o botão de equilíbrio entre peso e nitidez (25 →
+25 MB, 28 → 19 MB, 31 → 14 MB):
+
+```bash
+ffmpeg -i master.mp4 -vf "scale=720:1280" -c:v libx264 -crf 31 -preset slow -pix_fmt yuv420p -c:a aac -b:a 96k -movflags +faststart public/videos/cao-veio-convencao.mp4
+```
+
+**Vídeo longo pede hospedagem externa.** Esses arquivos vivem no repositório,
+e cada versão fica no histórico para sempre. Passando de ~15 MB, o caminho
+certo é YouTube ou um CDN, não `public/`.
 
 As fotos do Cão Véio vieram de um mosaico 3x3 publicado no Instagram
 (1350x1687). Foram fatiadas em 9 arquivos de 444x556, detectando as
@@ -343,18 +374,33 @@ o offset depende de onde o texto termina.
 A página [`/avantcast`](src/app/avantcast/page.tsx) apresenta o podcast
 institucional: texto do cliente, botão para o canal no YouTube e um carrossel
 com fotos das gravações. O link no cabeçalho fica destacado — o podcast não é
-uma rede, então não entra na sequência das três marcas.
+uma rede, então não entra na sequência das cinco marcas.
+
+Uma versão curta da mesma seção vive na home, entre o portal das redes e o
+funil de consultoria. As duas leem o mesmo `avantcast.ts` e usam o mesmo
+[`BotaoCanal`](src/components/botao-canal.tsx), então o texto e o link do
+canal se mantêm iguais nos dois lugares sozinhos.
 
 Texto, link do canal e legendas das fotos vivem em
 [`src/content/avantcast.ts`](src/content/avantcast.ts).
 
 ### O carrossel
 
+O carrossel aparece em dois lugares: na home, entre o portal das redes e o
+funil de consultoria, e na própria página do podcast.
+
 Quem troca de slide é o **scroll do próprio navegador** (`scroll-snap`), não
 um `transform`. Isso entrega de graça o arrasto com o dedo, o scroll lateral
 no trackpad e o comportamento certo para quem navega pelo teclado. O
 indicador escuta o evento de scroll, então o ponto aceso continua correto
 mesmo quando o slide muda sem passar pelos botões.
+
+**O looping é infinito, e não um retorno correndo ao início.** O trilho tem
+uma segunda cópia das fotos no fim: passar da última é entrar nessa cópia, que
+é idêntica. A volta ao início real acontece depois, num salto instantâneo
+feito antes da próxima animação — a tela já mostra a foto certa e ninguém vê
+nada mudar. A cópia leva `aria-hidden`: para um leitor de tela ela seria a
+mesma lista contada duas vezes.
 
 O destino da navegação fica num `ref`, não no estado: com o scroll suave a
 viagem dura algumas centenas de milissegundos, e dois cliques seguidos pelo
