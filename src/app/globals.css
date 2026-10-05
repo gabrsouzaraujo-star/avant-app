@@ -1,102 +1,144 @@
 @import "tailwindcss";
 
 /*
- * A abertura divide a tela em duas faixas: video e retrato. A divisao so fica
- * lado a lado quando a tela e larga o bastante para a faixa do video continuar
- * mais larga que alta — abaixo disso o `object-cover` comecaria a comer as
- * laterais da assinatura, que sangra ate as bordas do master. Em qualquer
- * outra proporcao as duas faixas ficam empilhadas.
+ * Design system — AVANT FRANCHISING
+ *
+ * A marca e escura por padrao, com o dourado como unica cor saturada (valores
+ * extraidos do site atual — ainda nao ha manual de marca). Toda a interface
+ * consome so estes tokens: ao chegar o manual, troca-se aqui e nada mais.
+ *
+ * Os tokens ficam em `@theme` (e nao `@theme inline`) de proposito: os
+ * utilitarios passam a ler `var(--color-*)` em tempo de execucao, entao uma
+ * secao pode redefinir o token no proprio escopo — e assim que existe a
+ * `.secao-clara`, sem duplicar nenhuma classe nos componentes.
  */
-@custom-variant paisagem (@media (min-aspect-ratio: 115/100));
+
+@theme {
+  /* ---------- Cor ---------- */
+  --color-background: #0b0b0c;
+  --color-surface: #141414;
+  --color-surface-raised: #1c1c1c;
+  --color-text: #f4f1ea;
+  --color-text-muted: #a39e95;
+  --color-border: #2a2826;
+
+  --color-brand: #da8e1d;
+  --color-brand-dark: #8a5509;
+  --color-brand-light: #f0b45a;
+  --color-brand-contrast: #0b0b0c;
+  /* Dourado usado como TEXTO: na secao clara ele escurece para manter AA. */
+  --color-brand-text: #da8e1d;
+
+  --color-accent: #f0b45a;
+  --color-success: #3fa66b;
+  --color-error: #e5484d;
+
+  /* Veu para texto sobre foto ou video. */
+  --color-overlay: rgb(11 11 12 / 0.64);
+
+  /* ---------- Tipografia ---------- */
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  /* Serifada editorial: so em titulos estrategicos e numeros grandes. */
+  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
+
+  /* Escala fluida: cresce com a tela sem saltos entre breakpoints. */
+  --text-display: clamp(2.6rem, 1.55rem + 4.6vw, 5.4rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.015em;
+  --text-h1: clamp(2.2rem, 1.5rem + 3vw, 3.9rem);
+  --text-h1--line-height: 1.06;
+  --text-h1--letter-spacing: -0.01em;
+  --text-h2: clamp(1.75rem, 1.35rem + 1.7vw, 2.75rem);
+  --text-h2--line-height: 1.12;
+  --text-h2--letter-spacing: -0.02em;
+  --text-h3: clamp(1.2rem, 1.1rem + 0.45vw, 1.5rem);
+  --text-h3--line-height: 1.3;
+  --text-lead: clamp(1.05rem, 1rem + 0.3vw, 1.25rem);
+  --text-lead--line-height: 1.65;
+  --text-numero: clamp(2.75rem, 2rem + 3vw, 4.5rem);
+  --text-numero--line-height: 1;
+
+  /* ---------- Forma ---------- */
+  /* Cantos quase retos: consultoria, nao app. */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  --shadow-elevado: 0 24px 60px -24px rgb(0 0 0 / 0.6);
+
+  /* ---------- Movimento ---------- */
+  --ease-saida: cubic-bezier(0.22, 1, 0.36, 1);
+}
 
 /*
- * Design tokens — AVANT FRANCHISING
- *
- * Valores extraidos do site atual (www2.avantfranquias.com.br): a marca e
- * escura por padrao, com dourado como unica cor de destaque. Ainda nao
- * temos o manual de marca oficial — ao recebe-lo, basta ajustar os valores
- * abaixo, pois toda a interface consome apenas estes tokens.
- *
- * O site e dark-first: nao ha variante clara: o tema escuro E a marca.
+ * Secao editorial clara ("papel"). Alterna com as escuras para dar ritmo de
+ * publicacao a pagina. O dourado de texto escurece aqui: #DA8E1D sobre papel
+ * nao atinge contraste AA.
  */
-
-:root {
-  --background: #000000;
-  --foreground: #ffffff;
-
-  --surface: #1b1b1b;
-  --surface-raised: #242424;
-  --border: #2e2e2e;
-  --muted: #a1a1a1;
-
-  --brand: #da8e1d;
-  --brand-foreground: #000000;
-  --brand-hover: #eda33a;
-
-  /* Sobreposicao usada para dar contraste ao texto sobre video/imagem. */
-  --overlay: rgb(0 0 0 / 0.62);
+.secao-clara {
+  --color-background: #f2ede4;
+  --color-surface: #e9e3d7;
+  --color-surface-raised: #e2dbcd;
+  --color-text: #141414;
+  --color-text-muted: #57524a;
+  --color-border: #d6cebf;
+  --color-brand-text: #8a5509;
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
-  --color-surface-raised: var(--surface-raised);
-  --color-border: var(--border);
-  --color-muted: var(--muted);
-
-  --color-brand: var(--brand);
-  --color-brand-foreground: var(--brand-foreground);
-  --color-brand-hover: var(--brand-hover);
-
-  --color-overlay: var(--overlay);
-
-  --font-sans: var(--font-poppins);
-  --font-mono: var(--font-geist-mono);
+/* Container padrao do site: 1240px de conteudo e calha lateral fluida. */
+@utility container-site {
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
+/* Respiro vertical padrao das secoes. */
+@utility secao {
+  padding-block: clamp(4.5rem, 3rem + 6vw, 8.5rem);
 }
 
-/*
- * Acento proprio de cada rede — e o que da "peculiaridade" visual a cada uma.
- * Redefinem o token --brand no escopo da secao, entao qualquer utilitario
- * (text-brand, bg-brand, border-brand) se adapta sozinho.
- *
- * Valores reais: Cao Veio e MedInfuse saem do CSS dos sites das proprias
- * redes; Move Fitness foi amostrado do logo no video institucional; Don Kebab
- * e Shogun Team, do pixel mais saturado do letreiro em neon e do logo da
- * academia, nas fotos enviadas pelo cliente.
- * Confirmar com os manuais de marca quando chegarem.
- */
-.tema-cao-veio {
-  --brand: #b5843b;
-  --brand-hover: #cb9a4e;
-  --brand-foreground: #000000;
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Ancoras nao ficam escondidas atras do header fixo. */
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
 
-.tema-medinfuse {
-  --brand: #d7b46b;
-  --brand-hover: #e7c883;
-  --brand-foreground: #16181d;
-}
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 
-.tema-move-fitness {
-  --brand: #f0d000;
-  --brand-hover: #ffe22e;
-  --brand-foreground: #16181d;
-}
+  ::selection {
+    background-color: var(--color-brand);
+    color: var(--color-brand-contrast);
+  }
 
-.tema-don-kebab {
-  --brand: #f5d401;
-  --brand-hover: #ffe53d;
-  --brand-foreground: #16181d;
-}
+  /* Foco sempre visivel para teclado, nunca para clique de mouse. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
 
-.tema-shogun-team {
-  --brand: #f2760e;
-  --brand-hover: #ff8f33;
-  --brand-foreground: #16181d;
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }

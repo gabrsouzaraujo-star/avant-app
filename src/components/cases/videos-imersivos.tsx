@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Apresentacao } from "@/content/franquias";
+import type { Apresentacao } from "@/data/cases";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 
@@ -33,10 +33,8 @@ export function VideosImersivos({
   if (apresentacoes.length === 0) return null;
 
   return (
-    <section className="relative overflow-hidden pb-24">
-      <h2 className="mx-auto max-w-6xl px-6 text-3xl font-bold tracking-tight">
-        {titulo}
-      </h2>
+    <section className="secao relative overflow-hidden">
+      <h2 className="container-site text-h2 font-semibold">{titulo}</h2>
 
       {apresentacoes.map((apresentacao) => (
         <Palco
@@ -127,7 +125,7 @@ function Palco({
         {/* Brilho da rede por tras do video: e ele que costura o retangulo ao
             fundo da pagina, junto com a mascara das bordas. */}
         <div
-          className="bg-brand/25 absolute -inset-8 -z-10 rounded-[3rem] blur-3xl"
+          className="bg-brand/15 absolute -inset-8 -z-10 rounded-[3rem] blur-3xl"
           aria-hidden="true"
         />
 
@@ -167,8 +165,8 @@ function Palco({
       </div>
 
       <figcaption className="mt-6 text-center">
-        <p className="text-lg font-semibold">{apresentacao.titulo}</p>
-        <p className="text-muted mt-1 text-sm">{apresentacao.chamada}</p>
+        <p className="text-lg font-medium">{apresentacao.titulo}</p>
+        <p className="text-text-muted mt-1 text-sm">{apresentacao.chamada}</p>
       </figcaption>
     </figure>
   );

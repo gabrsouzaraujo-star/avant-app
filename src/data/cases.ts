@@ -1,0 +1,383 @@
+/**
+ * Cases da AVANT — negocios que a consultoria ajudou a estruturar, formatar
+ * e/ou expandir por meio do franchising.
+ *
+ * Regras deste arquivo (decisao do cliente, 2026-10-05):
+ * - As marcas sao CASES. Nao sao redes proprias nem empresas da AVANT: nada
+ *   aqui afirma sociedade ou propriedade.
+ * - Nenhum numero, resultado ou depoimento e inventado. Campo sem fonte fica
+ *   vazio, e o componente correspondente simplesmente nao aparece.
+ * - Cada numero carrega a propria fonte, exibida como nota no case.
+ *
+ * Os textos de apresentacao das redes e as contagens de unidades vieram dos
+ * videos institucionais das proprias marcas (publicados em 28/08/2025).
+ */
+
+export type Foto = {
+  src: string;
+  alt: string;
+};
+
+export type Numero = {
+  valor: string;
+  rotulo: string;
+};
+
+export type Pessoa = {
+  nome: string;
+  papel: string;
+  bio?: string;
+  foto?: string;
+};
+
+/** Video com fala, tocado dentro da pagina quando a rolagem chega nele. */
+export type Apresentacao = {
+  src: string;
+  poster: string;
+  titulo: string;
+  chamada: string;
+};
+
+/** Depoimento real — nome, cargo e empresa sao obrigatorios. */
+export type Depoimento = {
+  texto: string;
+  autor: string;
+  cargo: string;
+  empresa: string;
+  foto?: string;
+};
+
+export type Case = {
+  slug: string;
+  nome: string;
+  segmento: string;
+  /** Frase-assinatura da propria marca. */
+  assinatura: string;
+  /** Apresentacao do negocio, na voz da propria rede. */
+  descricao: string;
+  /** Imagem principal do case (capa nos cards e no topo da pagina). */
+  capa: Foto & { largura: number; altura: number };
+  /** Pessoas publicas ligadas a marca, com o papel que o material sustenta. */
+  personalidades: Pessoa[];
+  /** Site oficial da marca, so quando confirmado. */
+  site?: string;
+
+  // ---- Narrativa do case. Vazio ate o cliente enviar. ----
+  /** TODO(cliente): qual era o desafio do negocio antes da AVANT. */
+  desafio?: string;
+  /** TODO(cliente): o que a AVANT fez, frente a frente. */
+  atuacao: string[];
+  /** Numeros da rede, com a fonte logo abaixo. */
+  numeros: Numero[];
+  fonteNumeros?: string;
+  depoimentos: Depoimento[];
+
+  galeria: Foto[];
+  equipe: Pessoa[];
+  apresentacoes: Apresentacao[];
+
+  /** O case principal ganha a vitrine editorial na home e em /cases. */
+  principal?: boolean;
+};
+
+const FONTE_VIDEOS =
+  "Dados divulgados pela própria rede em vídeo institucional, agosto de 2025.";
+
+export const cases: Case[] = [
+  {
+    slug: "medinfuse",
+    nome: "MedInfuse",
+    segmento: "Saúde e bem-estar",
+    assinatura: "Pioneira em terapias injetáveis e implantes subcutâneos",
+    descricao:
+      "Especializada em terapias injetáveis e implantes subcutâneos para emagrecimento, hipertrofia e longevidade. Une medicina integrativa, tecnologia e acompanhamento médico em um modelo pensado para ser replicado por médicos franqueados.",
+    capa: {
+      src: "/videos/rede-medinfuse.webp",
+      alt: "Fachada de consultório MedInfuse com o logo da rede",
+      largura: 720,
+      altura: 510,
+    },
+    personalidades: [
+      { nome: "Dr. Edir Soccol Jr.", papel: "Fundador" },
+      { nome: "Dr. Felipe Balem", papel: "Fundador" },
+    ],
+    site: "https://medinfuse.com.br",
+    atuacao: [
+      // Fato publicado pela propria rede: o socio-fundador da AVANT lidera a
+      // expansao da MedInfuse. TODO(cliente): detalhar as frentes do projeto.
+      "Lucas Camargo, sócio-fundador da AVANT, atua como diretor de franquias da MedInfuse e lidera a estratégia de crescimento e expansão nacional da marca.",
+    ],
+    numeros: [
+      { valor: "+20", rotulo: "Unidades no Brasil" },
+      { valor: "2025", rotulo: "Início da expansão em franquias" },
+    ],
+    fonteNumeros: FONTE_VIDEOS,
+    depoimentos: [],
+    galeria: [],
+    equipe: [
+      {
+        nome: "Dr. Edir Soccol Jr.",
+        papel: "Fundador da MedInfuse",
+        bio: "Médico há mais de 23 anos, especialista em Medicina Esportiva e Ortopedia, com pós-graduação em Endocrinologia e Nutrologia. Na MedInfuse, atua no desenvolvimento dos protocolos médicos e na evolução científica da rede.",
+        foto: "/imagens/medinfuse-edir-soccol.webp",
+      },
+      {
+        nome: "Dr. Felipe Balem",
+        papel: "Fundador da MedInfuse",
+        bio: "Médico há mais de 10 anos, une medicina baseada em evidências, inovação e padronização assistencial. Na MedInfuse, responde pelos protocolos clínicos e pela evolução científica da rede.",
+        foto: "/imagens/medinfuse-felipe-balem.webp",
+      },
+      {
+        nome: "Dr. Luiz Paulo",
+        papel: "Sócio da MedInfuse",
+        bio: "Presidente da Associação Brasileira de Hormonologia, realizou fellowship na Universidade de Harvard e foi o primeiro médico brasileiro treinado pela HTCA (Hormone Therapy Center of America). Mentor da rede.",
+        foto: "/imagens/medinfuse-luiz-paulo.webp",
+      },
+      {
+        nome: "Pricila Pavani",
+        papel: "Diretora executiva",
+        bio: "Farmacêutica e administradora, com experiência em liderança estratégica e estruturação de processos. Na MedInfuse, transforma excelência operacional em um modelo replicável para toda a rede.",
+        foto: "/imagens/medinfuse-pricila-pavani.webp",
+      },
+      {
+        nome: "Lucas Camargo",
+        papel: "Diretor de franquias · Sócio-fundador da AVANT",
+        bio: "Na MedInfuse, lidera a estratégia de crescimento e expansão nacional da marca.",
+        foto: "/imagens/medinfuse-lucas-camargo.webp",
+      },
+      {
+        nome: "Vitor Shin-Ike",
+        papel: "Diretor administrativo",
+        bio: "Engenheiro, empresário, franqueado e franqueador. Na MedInfuse, fortalece os processos, o suporte e o crescimento sustentável da rede.",
+        foto: "/imagens/medinfuse-vitor-shin-ike.webp",
+      },
+    ],
+    apresentacoes: [
+      {
+        src: "/videos/medinfuse-apresentacao.mp4",
+        poster: "/videos/medinfuse-apresentacao.webp",
+        titulo: "O modelo por dentro",
+        chamada: "Lucas Camargo, diretor de franquias, apresenta a rede.",
+      },
+    ],
+    principal: true,
+  },
+  {
+    slug: "cao-veio",
+    nome: "Cão Véio",
+    segmento: "Gastronomia",
+    assinatura: "Fidelidade até o osso",
+    descricao:
+      "Restaurante e bar temático de rock and roll criado por Henrique Fogaça e Fernando Badauí. A rede leva atmosfera própria e cardápio autoral para diferentes cidades do Brasil.",
+    capa: {
+      src: "/videos/rede-cao-veio.webp",
+      alt: "Logo do Cão Véio sobre prato do cardápio da casa",
+      largura: 720,
+      altura: 510,
+    },
+    personalidades: [
+      { nome: "Henrique Fogaça", papel: "Criador da marca" },
+      { nome: "Fernando Badauí", papel: "Criador da marca" },
+    ],
+    site: "https://caoveio.com.br",
+    atuacao: [],
+    numeros: [
+      { valor: "16", rotulo: "Unidades na rede" },
+      { valor: "10", rotulo: "Em operação" },
+      { valor: "6", rotulo: "Em implantação" },
+    ],
+    fonteNumeros: FONTE_VIDEOS,
+    depoimentos: [],
+    galeria: [
+      {
+        src: "/imagens/cao-veio-1.webp",
+        alt: "Hambúrguer artesanal servido no pão brioche",
+      },
+      { src: "/imagens/cao-veio-2.webp", alt: "Drink autoral em copo baixo" },
+      {
+        src: "/imagens/cao-veio-3.webp",
+        alt: "Jalapeños recheados e gratinados",
+      },
+      {
+        src: "/imagens/cao-veio-4.webp",
+        alt: "Tostadas de camarão com microverdes",
+      },
+      {
+        src: "/imagens/cao-veio-5.webp",
+        alt: "Bolinhos empanados com maionese defumada",
+      },
+      { src: "/imagens/cao-veio-6.webp", alt: "Fritas com cheddar e bacon" },
+    ],
+    equipe: [],
+    apresentacoes: [
+      {
+        src: "/videos/cao-veio-convencao.mp4",
+        poster: "/videos/cao-veio-convencao.webp",
+        titulo: "Convenção de franqueados",
+        chamada: "Bastidores do encontro da rede.",
+      },
+    ],
+  },
+  {
+    slug: "move-fitness",
+    nome: "Move Fitness",
+    segmento: "Fitness",
+    assinatura: "Movimente seu corpo. Evolua sua vida.",
+    descricao:
+      "Rede de estúdios dedicada à saúde e ao bem-estar, com aulas que fortalecem o corpo, melhoram a postura e aumentam a flexibilidade. Ambiente especializado e equipe qualificada em cada unidade.",
+    capa: {
+      src: "/imagens/move-fitness-12-anos.webp",
+      alt: "Dupla com uniforme da Move Fitness na campanha de 12 anos da rede; à direita, Alexandre Pato",
+      largura: 740,
+      altura: 990,
+    },
+    personalidades: [{ nome: "Alexandre Pato", papel: "Sócio da rede" }],
+    site: "https://movefitness.com.br",
+    atuacao: [],
+    numeros: [
+      { valor: "12 anos", rotulo: "De história" },
+      { valor: "5", rotulo: "Unidades na rede" },
+    ],
+    fonteNumeros: FONTE_VIDEOS,
+    depoimentos: [],
+    galeria: [],
+    equipe: [],
+    apresentacoes: [
+      {
+        src: "/videos/move-fitness-apresentacao.mp4",
+        poster: "/videos/move-fitness-apresentacao.webp",
+        titulo: "A origem da rede",
+        chamada: "Alexandre Pato apresenta a Move Fitness.",
+      },
+      {
+        src: "/videos/move-fitness-bastidores.mp4",
+        poster: "/videos/move-fitness-bastidores.webp",
+        titulo: "Bastidores",
+        chamada: "Conversa na sede da rede.",
+      },
+    ],
+  },
+  {
+    slug: "don-kebab",
+    nome: "Don Kebab",
+    segmento: "Gastronomia",
+    assinatura: "Arab street food",
+    descricao:
+      "Comida árabe de rua em casa própria: kebab no espeto vertical, wraps montados na hora, falafel e porções. Operação de balcão e fachada em neon — o modelo nasceu em Curitiba e chegou a São José dos Campos em 2025.",
+    capa: {
+      src: "/imagens/don-kebab-destaque.webp",
+      alt: "Wanderlei Silva com uma sacola da rede, sob o letreiro em neon da Don Kebab",
+      largura: 800,
+      altura: 592,
+    },
+    personalidades: [
+      // O material sustenta "rosto da marca" — nao afirmar sociedade.
+      { nome: "Wanderlei Silva", papel: "Rosto da marca" },
+    ],
+    site: "https://donkebab.com",
+    atuacao: [],
+    numeros: [],
+    depoimentos: [],
+    galeria: [
+      {
+        src: "/imagens/don-kebab-4.webp",
+        alt: "Três sócios diante do letreiro em neon da marca, dentro da loja",
+      },
+      {
+        src: "/imagens/don-kebab-2.webp",
+        alt: "Wrap recheado servido no papel",
+      },
+      {
+        src: "/imagens/don-kebab-6.webp",
+        alt: "Noite de operação na calçada, com a fachada iluminada ao fundo",
+      },
+      {
+        src: "/imagens/don-kebab-5.webp",
+        alt: "Equipe da unidade reunida sob o letreiro em neon",
+      },
+      {
+        src: "/imagens/don-kebab-3.webp",
+        alt: "Brinde com chope no salão da unidade",
+      },
+      {
+        src: "/imagens/don-kebab-7.webp",
+        alt: "Sócios em frente à unidade em noite de casa cheia",
+      },
+    ],
+    equipe: [],
+    apresentacoes: [
+      {
+        src: "/videos/don-kebab-apresentacao.mp4",
+        poster: "/videos/don-kebab-apresentacao.webp",
+        titulo: "O produto por dentro",
+        chamada: "Do espeto ao balcão, a operação em movimento.",
+      },
+    ],
+  },
+  {
+    slug: "shogun-team",
+    nome: "Shogun Team",
+    segmento: "Artes marciais",
+    assinatura: "Do tatame ao ringue, estrutura de atleta",
+    descricao:
+      "Academia de artes marciais e MMA com estrutura completa: octógono, ringue oficial, tatame de competição, área de musculação e loja. A rede opera no Brasil e na Suíça.",
+    capa: {
+      src: "/imagens/shogun-team-2.webp",
+      alt: "Tatame amplo da Shogun Team com o octógono ao fundo",
+      largura: 800,
+      altura: 800,
+    },
+    personalidades: [
+      { nome: "Maurício “Shogun” Rua", papel: "Rosto da marca" },
+    ],
+    atuacao: [],
+    numeros: [],
+    depoimentos: [],
+    galeria: [
+      {
+        src: "/imagens/shogun-team-1.webp",
+        alt: "Recepção da academia, com cinturões expostos e o logo Shogun Team",
+      },
+      {
+        src: "/imagens/shogun-team-3.webp",
+        alt: "Ringue oficial com o logo da equipe no centro da lona",
+      },
+      {
+        src: "/imagens/shogun-team-5.webp",
+        alt: "Área de musculação e condicionamento, ao lado do octógono",
+      },
+      {
+        src: "/imagens/shogun-team-7.webp",
+        alt: "Sala de espera com troféus, poltronas e o brasão na parede",
+      },
+      {
+        src: "/imagens/shogun-team-8.webp",
+        alt: "Luvas de MMA e bandagens da equipe em exposição",
+      },
+      {
+        src: "/imagens/shogun-team-10.webp",
+        alt: "Parede com camisetas de equipes e lutadores, algumas autografadas",
+      },
+    ],
+    equipe: [],
+    apresentacoes: [
+      {
+        src: "/videos/shogun-team-apresentacao.mp4",
+        poster: "/videos/shogun-team-apresentacao.webp",
+        titulo: "A academia por dentro",
+        chamada: "Um giro completo pela estrutura da unidade.",
+      },
+    ],
+  },
+];
+
+export const casePrincipal = cases.find((item) => item.principal) ?? cases[0];
+export const casesSecundarios = cases.filter(
+  (item) => item.slug !== casePrincipal.slug,
+);
+
+export function buscarCase(slug: string): Case | undefined {
+  return cases.find((item) => item.slug === slug);
+}
+
+export const segmentos = [...new Set(cases.map((item) => item.segmento))];
