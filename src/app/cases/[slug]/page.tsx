@@ -79,7 +79,11 @@ export default async function CasePage({ params }: PageProps<"/cases/[slug]">) {
               fill
               priority
               sizes="(min-width: 1024px) 58vw, 100vw"
-              className="object-cover"
+              className={
+                item.capa.ajuste === "contain"
+                  ? "bg-background object-contain"
+                  : "object-cover"
+              }
             />
           </div>
 
@@ -206,6 +210,7 @@ export default async function CasePage({ params }: PageProps<"/cases/[slug]">) {
       <VideosImersivos
         apresentacoes={item.apresentacoes}
         titulo="A rede em vídeo"
+        fotos={item.mosaico}
       />
 
       <Galeria fotos={item.galeria} titulo="Por dentro da operação" />

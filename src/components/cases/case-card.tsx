@@ -23,7 +23,12 @@ export function CaseCard({ item, className, nivel: Titulo = "h3" }: Props) {
           alt={item.capa.alt}
           fill
           sizes="(min-width: 1024px) 25vw, 50vw"
-          className="object-cover transition-transform duration-700 ease-(--ease-saida) group-hover:scale-[1.04]"
+          className={cn(
+            "transition-transform duration-700 ease-(--ease-saida) group-hover:scale-[1.04]",
+            item.capa.ajuste === "contain"
+              ? "bg-background object-contain"
+              : "object-cover",
+          )}
         />
         <div
           aria-hidden="true"

@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import type { Apresentacao } from "@/data/cases";
+import type { Apresentacao, Foto } from "@/data/cases";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 
@@ -24,13 +25,28 @@ const VISIVEL = 0.55;
 export function VideosImersivos({
   apresentacoes,
   titulo,
+  fotos = [],
 }: {
   apresentacoes: Apresentacao[];
   titulo: string;
+  /** Com dois videos e seis fotos, vira o mosaico (ver `Mosaico`). */
+  fotos?: Foto[];
 }) {
   const [comSom, setComSom] = useState<string | null>(null);
 
   if (apresentacoes.length === 0) return null;
+
+  if (apresentacoes.length === 2 && fotos.length >= 6) {
+    return (
+      <Mosaico
+        apresentacoes={apresentacoes}
+        fotos={fotos}
+        titulo={titulo}
+        comSom={comSom}
+        aoAlternarSom={setComSom}
+      />
+    );
+  }
 
   return (
     <section className="secao relative overflow-hidden">
@@ -50,14 +66,96 @@ export function VideosImersivos({
   );
 }
 
+/*
+ * Posicao de cada peca do mosaico. Desktop: cinco colunas — fotos, video,
+ * fotos, video, fotos —, com duas fotos empilhadas em cada coluna de fotos.
+ * Celular: tres fotos em cima, os dois videos lado a lado e tres fotos
+ * embaixo. A grade e uma so, entao nenhuma imagem e baixada duas vezes.
+ */
+const POSICAO_FOTOS = [
+  "col-span-2 col-start-1 row-start-1 lg:col-span-1 lg:col-start-1 lg:row-start-1",
+  "col-span-2 col-start-1 row-start-3 lg:col-span-1 lg:col-start-1 lg:row-start-2",
+  "col-span-2 col-start-3 row-start-1 lg:col-span-1 lg:col-start-3 lg:row-start-1",
+  "col-span-2 col-start-3 row-start-3 lg:col-span-1 lg:col-start-3 lg:row-start-2",
+  "col-span-2 col-start-5 row-start-1 lg:col-span-1 lg:col-start-5 lg:row-start-1",
+  "col-span-2 col-start-5 row-start-3 lg:col-span-1 lg:col-start-5 lg:row-start-2",
+];
+const POSICAO_VIDEOS = [
+  "col-span-3 col-start-1 row-start-2 lg:col-span-1 lg:col-start-2 lg:row-span-2 lg:row-start-1",
+  "col-span-3 col-start-4 row-start-2 lg:col-span-1 lg:col-start-4 lg:row-span-2 lg:row-start-1",
+];
+
+/**
+ * Dois videos lado a lado, cercados de fotos: duas em cada lateral e duas no
+ * meio. Os videos seguem a mesma regra dos palcos — tocam mudos e em loop
+ * enquanto estao na tela, e o som liga em um de cada vez.
+ */
+function Mosaico({
+  apresentacoes,
+  fotos,
+  titulo,
+  comSom,
+  aoAlternarSom,
+}: {
+  apresentacoes: Apresentacao[];
+  fotos: Foto[];
+  titulo: string;
+  comSom: string | null;
+  aoAlternarSom: (src: string | null) => void;
+}) {
+  return (
+    <section className="secao relative overflow-hidden">
+      <h2 className="container-site text-h2 font-semibold">{titulo}</h2>
+
+      <div className="mx-auto mt-12 grid w-full max-w-[1600px] grid-cols-6 gap-2 px-[clamp(1rem,0.5rem+2.5vw,2.5rem)] sm:gap-3 lg:grid-cols-[1fr_1.2fr_1fr_1.2fr_1fr] lg:grid-rows-2">
+        {fotos.slice(0, 6).map((foto, indice) => (
+          <div
+            key={foto.src}
+            className={cn(
+              "bg-surface relative aspect-[4/5] overflow-hidden lg:aspect-auto",
+              POSICAO_FOTOS[indice],
+            )}
+          >
+            <Image
+              src={foto.src}
+              alt={foto.alt}
+              fill
+              sizes="(min-width: 1024px) 18vw, 33vw"
+              className="object-cover"
+            />
+          </div>
+        ))}
+
+        {apresentacoes.map((apresentacao, indice) => (
+          <Palco
+            key={apresentacao.src}
+            apresentacao={apresentacao}
+            compacto
+            className={POSICAO_VIDEOS[indice]}
+            comSom={comSom === apresentacao.src}
+            aoAlternarSom={(ligado) =>
+              aoAlternarSom(ligado ? apresentacao.src : null)
+            }
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Palco({
   apresentacao,
   comSom,
   aoAlternarSom,
+  compacto = false,
+  className,
 }: {
   apresentacao: Apresentacao;
   comSom: boolean;
   aoAlternarSom: (ligado: boolean) => void;
+  /** Versao para o mosaico: preenche a celula e leva a legenda por cima. */
+  compacto?: boolean;
+  className?: string;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [deveCarregar, setDeveCarregar] = useState(false);
@@ -119,6 +217,63 @@ function Palco({
     else video.pause();
   };
 
+  const controles = (
+    <>
+      <Botao
+        aoClicar={alternarPlay}
+        rotulo={tocando ? "Pausar vídeo" : "Tocar vídeo"}
+      >
+        {tocando ? <IconePausa /> : <IconePlay />}
+      </Botao>
+
+      <Botao
+        aoClicar={() => aoAlternarSom(!comSom)}
+        rotulo={comSom ? "Desligar o som" : "Ligar o som"}
+        aceso={comSom}
+      >
+        {comSom ? <IconeSom /> : <IconeMudo />}
+      </Botao>
+    </>
+  );
+
+  if (compacto) {
+    return (
+      <figure
+        className={cn(
+          "bg-surface relative aspect-[9/16] overflow-hidden",
+          className,
+        )}
+      >
+        <video
+          ref={videoRef}
+          src={deveCarregar ? apresentacao.src : undefined}
+          poster={apresentacao.poster}
+          className="absolute inset-0 size-full object-cover"
+          loop
+          muted
+          playsInline
+          preload="none"
+          onPlay={() => setTocando(true)}
+          onPause={() => setTocando(false)}
+          aria-label={`${apresentacao.titulo}: ${apresentacao.chamada}`}
+        />
+
+        <div className="absolute top-2 right-2 flex items-center gap-1.5 sm:top-3 sm:right-3 sm:gap-2">
+          {controles}
+        </div>
+
+        <figcaption className="from-background/90 absolute inset-x-0 bottom-0 bg-linear-to-t to-transparent p-3 pt-12 sm:p-5 sm:pt-16">
+          <p className="text-sm font-medium sm:text-base">
+            {apresentacao.titulo}
+          </p>
+          <p className="text-text-muted mt-0.5 hidden text-xs sm:block sm:text-sm">
+            {apresentacao.chamada}
+          </p>
+        </figcaption>
+      </figure>
+    );
+  }
+
   return (
     <figure className="mt-14 flex flex-col items-center px-6">
       <div className="relative">
@@ -147,20 +302,7 @@ function Palco({
         />
 
         <div className="absolute right-6 bottom-14 flex items-center gap-2">
-          <Botao
-            aoClicar={alternarPlay}
-            rotulo={tocando ? "Pausar vídeo" : "Tocar vídeo"}
-          >
-            {tocando ? <IconePausa /> : <IconePlay />}
-          </Botao>
-
-          <Botao
-            aoClicar={() => aoAlternarSom(!comSom)}
-            rotulo={comSom ? "Desligar o som" : "Ligar o som"}
-            aceso={comSom}
-          >
-            {comSom ? <IconeSom /> : <IconeMudo />}
-          </Botao>
+          {controles}
         </div>
       </div>
 

@@ -56,7 +56,12 @@ export type Case = {
   /** Apresentacao do negocio, na voz da propria rede. */
   descricao: string;
   /** Imagem principal do case (capa nos cards e no topo da pagina). */
-  capa: Foto & { largura: number; altura: number };
+  capa: Foto & {
+    largura: number;
+    altura: number;
+    /** `contain` para logos: a imagem aparece inteira, sem corte. */
+    ajuste?: "contain";
+  };
   /** Pessoas publicas ligadas a marca, com o papel que o material sustenta. */
   personalidades: Pessoa[];
   /** Site oficial da marca, so quando confirmado. */
@@ -73,6 +78,11 @@ export type Case = {
   depoimentos: Depoimento[];
 
   galeria: Foto[];
+  /**
+   * Seis fotos em volta de dois videos, lado a lado: duas em cada lateral e
+   * duas no meio. So vale quando o case tem exatamente dois videos.
+   */
+  mosaico?: Foto[];
   equipe: Pessoa[];
   apresentacoes: Apresentacao[];
 
@@ -170,10 +180,12 @@ export const cases: Case[] = [
     descricao:
       "Restaurante e bar temático de rock and roll criado por Henrique Fogaça e Fernando Badauí. A rede leva atmosfera própria e cardápio autoral para diferentes cidades do Brasil.",
     capa: {
-      src: "/videos/rede-cao-veio.webp",
-      alt: "Logo do Cão Véio sobre prato do cardápio da casa",
-      largura: 720,
-      altura: 510,
+      src: "/imagens/cao-veio-logo.webp",
+      alt: "Logo do Cão Véio: cão de monóculo e gravata-borboleta sob a faixa com o nome da casa",
+      largura: 485,
+      altura: 632,
+      // E um logo: mostrar inteiro, sem cortar.
+      ajuste: "contain",
     },
     personalidades: [
       { nome: "Henrique Fogaça", papel: "Criador da marca" },
@@ -188,28 +200,81 @@ export const cases: Case[] = [
     ],
     fonteNumeros: FONTE_VIDEOS,
     depoimentos: [],
+    // Fotos oficiais das unidades Batel e Rua da Musica, em Curitiba,
+    // recortadas dos mosaicos originais (3300x4096) publicados pela rede.
     galeria: [
       {
-        src: "/imagens/cao-veio-1.webp",
-        alt: "Hambúrguer artesanal servido no pão brioche",
-      },
-      { src: "/imagens/cao-veio-2.webp", alt: "Drink autoral em copo baixo" },
-      {
-        src: "/imagens/cao-veio-3.webp",
-        alt: "Jalapeños recheados e gratinados",
+        src: "/imagens/cao-veio-salao.webp",
+        alt: "Salão do Cão Véio com sofás de couro, painel de azulejos com cães e o logo na parede",
       },
       {
-        src: "/imagens/cao-veio-4.webp",
-        alt: "Tostadas de camarão com microverdes",
+        src: "/imagens/cao-veio-sobremesa.webp",
+        alt: "Sobremesa caramelizada com fatias de pêssego, cortada com colher",
       },
       {
-        src: "/imagens/cao-veio-5.webp",
-        alt: "Bolinhos empanados com maionese defumada",
+        src: "/imagens/cao-veio-jalapenos.webp",
+        alt: "Jalapeños gratinados servidos com nachos e molho",
       },
-      { src: "/imagens/cao-veio-6.webp", alt: "Fritas com cheddar e bacon" },
+      {
+        src: "/imagens/cao-veio-sanduiche.webp",
+        alt: "Sanduíche de carne desfiada com agrião, mandioca frita e molhos da casa",
+      },
+      {
+        src: "/imagens/cao-veio-tartare.webp",
+        alt: "Steak tartare com gema mole e batata chips",
+      },
+      {
+        src: "/imagens/cao-veio-sliders.webp",
+        alt: "Minihambúrgueres servidos à luz de vela",
+      },
+      {
+        src: "/imagens/cao-veio-bar.webp",
+        alt: "Balcão do bar com prateleiras de destilados e banquetas de madeira",
+      },
+      {
+        src: "/imagens/cao-veio-sorvete.webp",
+        alt: "Sorvete com calda de chocolate e castanhas caramelizadas",
+      },
+      {
+        src: "/imagens/cao-veio-letreiro.webp",
+        alt: "Letreiro luminoso do Cão Véio na fachada, à noite",
+      },
+    ],
+    // Fotos em volta dos dois videos: duas em cada lateral e duas no meio.
+    mosaico: [
+      {
+        src: "/imagens/cao-veio-bartender.webp",
+        alt: "Bartender preparando drinks no balcão",
+      },
+      {
+        src: "/imagens/cao-veio-drinks.webp",
+        alt: "Brinde com dois coquetéis no balcão",
+      },
+      {
+        src: "/imagens/cao-veio-croquetes.webp",
+        alt: "Croquetes servidos um a um em travessa preta",
+      },
+      {
+        src: "/imagens/cao-veio-chope.webp",
+        alt: "Chope tirado na caneca com o logo do Cão Véio",
+      },
+      {
+        src: "/imagens/cao-veio-salao-cheio.webp",
+        alt: "Salão lotado em noite de casa cheia",
+      },
+      {
+        src: "/imagens/cao-veio-entrada.webp",
+        alt: "Entrada de uma unidade, com o nome Cão Véio sobre a porta",
+      },
     ],
     equipe: [],
     apresentacoes: [
+      {
+        src: "/videos/cao-veio-rua-da-musica.mp4",
+        poster: "/videos/cao-veio-rua-da-musica.webp",
+        titulo: "Unidade Rua da Música",
+        chamada: "Um giro pela casa em Curitiba.",
+      },
       {
         src: "/videos/cao-veio-convencao.mp4",
         poster: "/videos/cao-veio-convencao.webp",
