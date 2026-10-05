@@ -27,7 +27,9 @@ export function criarMetadata({
   const imagens = [{ url: imagem ?? "/opengraph-image" }];
 
   return {
-    title: titulo,
+    // `title: undefined` apagaria o titulo padrao do layout (a home ficava
+    // sem <title>): sem titulo proprio, a chave simplesmente nao vai.
+    ...(titulo ? { title: titulo } : {}),
     description: descricao,
     alternates: { canonical: caminho },
     openGraph: {

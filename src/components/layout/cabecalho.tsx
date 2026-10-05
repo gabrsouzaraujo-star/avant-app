@@ -58,86 +58,93 @@ export function Cabecalho() {
     pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300",
-        rolou || aberto
-          ? "bg-background/90 border-border border-b backdrop-blur-md"
-          : "border-b border-transparent",
-      )}
-    >
-      <a
-        href="#conteudo"
-        className="bg-brand text-brand-contrast sr-only z-50 px-4 py-2 focus:not-sr-only focus:absolute focus:top-3 focus:left-3"
-      >
-        Pular para o conteúdo
-      </a>
-
-      <div
+    <>
+      <header
         className={cn(
-          "container-site flex items-center justify-between gap-6 transition-[height] duration-300",
-          rolou || aberto ? "h-16" : "h-20 lg:h-24",
+          "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300",
+          rolou || aberto
+            ? "bg-background/90 border-border border-b backdrop-blur-md"
+            : "border-b border-transparent",
         )}
       >
-        <Link
-          href="/"
-          aria-label={`${site.nome} — página inicial`}
-          className="shrink-0"
+        <a
+          href="#conteudo"
+          className="bg-brand text-brand-contrast sr-only z-50 px-4 py-2 focus:not-sr-only focus:absolute focus:top-3 focus:left-3"
         >
-          <Logo />
-        </Link>
+          Pular para o conteúdo
+        </a>
 
-        <nav aria-label="Principal" className="hidden lg:block">
-          <ul className="flex items-center gap-8">
-            {navegacao.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  aria-current={ativo(item.href) ? "page" : undefined}
-                  className={cn(
-                    "relative py-2 text-sm transition-colors",
-                    "after:bg-brand after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100",
-                    ativo(item.href)
-                      ? "text-text after:scale-x-100"
-                      : "text-text-muted hover:text-text",
-                  )}
-                >
-                  {item.rotulo}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <LinkWhatsapp
-            origem="hero"
-            evento="hero_cta"
-            local="header"
-            className="hidden min-h-11 px-5 py-2 text-sm sm:inline-flex"
+        <div
+          className={cn(
+            "container-site flex items-center justify-between gap-6 transition-[height] duration-300",
+            rolou || aberto ? "h-16" : "h-20 lg:h-24",
+          )}
+        >
+          <Link
+            href="/"
+            aria-label={`${site.nome} — página inicial`}
+            className="shrink-0"
           >
-            Analisar minha empresa
-          </LinkWhatsapp>
+            <Logo />
+          </Link>
 
-          <button
-            ref={botaoRef}
-            type="button"
-            onClick={() => setAberto((valor) => !valor)}
-            aria-expanded={aberto}
-            aria-controls="menu-mobile"
-            aria-label={aberto ? "Fechar menu" : "Abrir menu"}
-            className="text-text -mr-2 grid size-12 place-items-center lg:hidden"
-          >
-            {aberto ? <X className="size-6" /> : <Menu className="size-6" />}
-          </button>
+          <nav aria-label="Principal" className="hidden lg:block">
+            <ul className="flex items-center gap-8">
+              {navegacao.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    aria-current={ativo(item.href) ? "page" : undefined}
+                    className={cn(
+                      "relative py-2 text-sm transition-colors",
+                      "after:bg-brand after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100",
+                      ativo(item.href)
+                        ? "text-text after:scale-x-100"
+                        : "text-text-muted hover:text-text",
+                    )}
+                  >
+                    {item.rotulo}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <LinkWhatsapp
+              origem="hero"
+              evento="hero_cta"
+              local="header"
+              className="hidden min-h-11 px-5 py-2 text-sm sm:inline-flex"
+            >
+              Analisar minha empresa
+            </LinkWhatsapp>
+
+            <button
+              ref={botaoRef}
+              type="button"
+              onClick={() => setAberto((valor) => !valor)}
+              aria-expanded={aberto}
+              aria-controls="menu-mobile"
+              aria-label={aberto ? "Fechar menu" : "Abrir menu"}
+              className="text-text -mr-2 grid size-12 place-items-center lg:hidden"
+            >
+              {aberto ? <X className="size-6" /> : <Menu className="size-6" />}
+            </button>
+          </div>
         </div>
-      </div>
+      </header>
 
+      {/*
+       * O painel fica FORA do <header>: o backdrop-filter do header vira o
+       * bloco de contencao de qualquer filho `fixed`, e o painel ficaria
+       * preso aos 64px do header, sem receber clique.
+       */}
       <div
         id="menu-mobile"
         ref={painelRef}
         hidden={!aberto}
-        className="bg-background fixed inset-x-0 top-16 bottom-0 overflow-y-auto lg:hidden"
+        className="bg-background fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto lg:hidden"
       >
         <nav
           aria-label="Menu"
@@ -176,6 +183,6 @@ export function Cabecalho() {
           </div>
         </nav>
       </div>
-    </header>
+    </>
   );
 }
