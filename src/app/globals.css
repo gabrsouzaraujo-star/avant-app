@@ -121,9 +121,13 @@
     color: var(--color-brand-contrast);
   }
 
-  /* Foco sempre visivel para teclado, nunca para clique de mouse. */
+  /*
+   * Foco sempre visivel para teclado, nunca para clique de mouse. Usa o
+   * dourado "de texto": na secao clara ele escurece e mantem o contraste de
+   * 3:1 que o WCAG exige para indicadores de foco.
+   */
   :focus-visible {
-    outline: 2px solid var(--color-brand);
+    outline: 2px solid var(--color-brand-text);
     outline-offset: 3px;
     border-radius: var(--radius-sm);
   }

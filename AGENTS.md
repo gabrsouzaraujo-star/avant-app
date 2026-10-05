@@ -15,9 +15,14 @@ setup e scripts.
 
 ## Contexto
 
-O escopo funcional ainda não foi definido com o cliente. Não invente módulos,
-entidades de domínio ou fluxos de negócio sem confirmação — o repositório está
-propositalmente enxuto.
+Site institucional B2B de uma consultoria de franquias: conversão 100% via
+WhatsApp, sem backend. Ver o [README.md](README.md) para páginas, dados e
+pendências.
+
+**Nunca invente** números, clientes, depoimentos, resultados ou relações
+comerciais. As cinco marcas (Cão Véio, MedInfuse, Move Fitness, Don Kebab e
+Shogun Team) são **cases**, e não redes próprias da Avant. O que faltar fica
+vazio, com `TODO(cliente)`, e a seção não aparece.
 
 ## Convenções
 
@@ -27,6 +32,9 @@ propositalmente enxuto.
   `src/app/globals.css`. Não usar cores literais (`bg-[#123456]`, `text-blue-500`)
   em componentes — a paleta da marca ainda é provisória e será trocada nos tokens.
 - Usar o helper `cn()` de `src/lib/utils.ts` para compor classes condicionais.
+- Conteúdo institucional só em `src/data/*`, nunca dentro de componente.
+- Todo link de WhatsApp sai de `whatsappHref()` (`src/lib/contato.ts`) ou do
+  componente `LinkWhatsapp`. Nunca escreva o número num componente.
 - Alias de import: `@/*` aponta para `src/*`.
 
 ## Antes de finalizar uma alteração
@@ -34,6 +42,9 @@ propositalmente enxuto.
 ```bash
 npm run typecheck && npm run lint && npm run format:check
 ```
+
+Para mudanças visíveis, rode também `npm run test:e2e` (com o dev server
+parado: o teste faz o próprio build).
 
 ## Fluxo de alteração
 

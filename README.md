@@ -1,453 +1,215 @@
 # AVANT APP
 
-Plataforma web da **AVANT FRANCHISING**.
+Site institucional da **AVANT Franchising**, consultoria que transforma negócios
+em redes de franquias.
 
-> **Status:** estrutura navegável, com conteúdo parcial. As cinco redes já têm
-> textos e mídia. O que falta aparece marcado como "A preencher" na interface —
-> hoje, os depoimentos de franqueados das cinco redes e os números da Don Kebab
-> e da Shogun Team.
+> **Status:** v2 completa na branch `redesign`. A v1 (portal das redes com
+> abertura em vídeo) continua em `prod-main`. Tudo o que depende do cliente está
+> marcado com `TODO(cliente)` no código e resumido em
+> [Pendências do cliente](#pendências-do-cliente).
 
-## Arquitetura
+## Objetivo
 
-O site atende **dois públicos**:
+O visitante, um empresário com um negócio que funciona, precisa entender em
+poucos segundos:
 
-1. **Candidatos a franqueado** das redes próprias (Cão Véio, MedInfuse, Move
-   Fitness, Don Kebab e Shogun Team) — cada rede tem página própria em
-   `/franquias/[slug]`.
-2. **Empresários que querem franquear a própria marca** — levados à Análise de
-   Franqueabilidade, o serviço de consultoria da AVANT.
+1. o que a Avant faz;
+2. para quem faz;
+3. que transformação entrega;
+4. por que confiar;
+5. qual é o próximo passo.
 
-A home funciona como portal: abertura de impacto, acesso às redes e o convite
-para a análise. O portal preenche sozinho os buracos da última linha da grade:
-quando o último card fica sozinho ou em dupla, ele se estica pelo que sobrou —
-nada a mexer ao entrar a próxima rede.
+O próximo passo é sempre uma conversa no **WhatsApp**. Não há formulário, nem
+backend, nem Typebot.
+
+## Páginas
+
+| Rota                              | Conteúdo                                                                                  |
+| --------------------------------- | ----------------------------------------------------------------------------------------- |
+| `/`                               | Hero, marcas, problema, pilares, método, cases, diagnóstico, ecossistema, AvantCast e CTA |
+| `/sobre`                          | Fundação, números, princípios e liderança                                                 |
+| `/servicos`                       | Os três pilares (Estruturar, Expandir, Sustentar) e os 11 serviços                        |
+| `/cases`, `/cases/[slug]`         | Cinco cases com narrativa editorial                                                       |
+| `/diagnostico`                    | Análise de franqueabilidade, com autoavaliação que vai para a mensagem                    |
+| `/conteudos`, `/conteudos/[slug]` | Os 15 vídeos reais do AvantCast, com player sob demanda                                   |
+| `/contato`                        | WhatsApp por intenção, e-mail, endereço e redes                                           |
+| `/politica-de-privacidade`        | Texto preliminar (LGPD) — precisa de validação jurídica                                   |
+
+Todas as páginas são estáticas (SSG), sem Server Action, API Route ou banco. As
+rotas da v1 (`/franquias/*`, `/avantcast`) e do WordPress antigo redirecionam
+para as novas em `next.config.ts`.
 
 ## Stack
 
-| Camada    | Tecnologia                           |
-| --------- | ------------------------------------ |
-| Framework | Next.js 16 (App Router)              |
-| UI        | React 19 + TypeScript (modo estrito) |
-| Estilo    | Tailwind CSS v4 (design tokens)      |
-| Qualidade | ESLint + Prettier                    |
-
-Banco de dados e autenticação ainda **não** foram escolhidos — serão definidos
-junto com o escopo do produto.
-
-## Requisitos
-
-- Node.js 20 ou superior (validado com a v24)
-- npm 10 ou superior
+| Camada    | Tecnologia                                       |
+| --------- | ------------------------------------------------ |
+| Framework | Next.js 16 (App Router, Turbopack)               |
+| UI        | React 19 + TypeScript (modo estrito)             |
+| Estilo    | Tailwind CSS v4 — tokens em `@theme`, sem config |
+| Motion    | framer-motion (`LazyMotion`), só no reveal       |
+| Ícones    | lucide-react + SVGs próprios para marcas         |
+| Testes    | Playwright                                       |
+| Deploy    | Vercel                                           |
 
 ## Como rodar
+
+Node.js 20 ou superior. Nesta máquina o Node não está no PATH — ver o
+[AGENTS.md](AGENTS.md).
 
 ```bash
 npm install
 ```
 
 ```bash
-cp .env.example .env.local
-```
-
-```bash
 npm run dev
 ```
 
-A aplicação sobe em http://localhost:3000.
-
 ## Scripts
 
-| Comando                | O que faz                                |
-| ---------------------- | ---------------------------------------- |
-| `npm run dev`          | Servidor de desenvolvimento              |
-| `npm run build`        | Build de produção                        |
-| `npm start`            | Sobe o build de produção                 |
-| `npm run lint`         | ESLint                                   |
-| `npm run typecheck`    | Checagem de tipos com o TypeScript       |
-| `npm run format`       | Formata o código com o Prettier          |
-| `npm run format:check` | Verifica formatação sem alterar arquivos |
+| Comando                | O que faz                                           |
+| ---------------------- | --------------------------------------------------- |
+| `npm run dev`          | Servidor de desenvolvimento                         |
+| `npm run build`        | Build de produção                                   |
+| `npm start`            | Sobe o build de produção                            |
+| `npm run lint`         | ESLint                                              |
+| `npm run typecheck`    | Checagem de tipos                                   |
+| `npm run format:check` | Verifica formatação                                 |
+| `npm run test:e2e`     | Playwright: faz o build, sobe na porta 3100 e testa |
 
-## Estrutura
-
-```
-src/
-  app/                      Rotas e páginas (App Router)
-    globals.css             Design tokens e acentos por rede
-    franquias/[slug]/       Página de cada rede
-    avantcast/              Página do podcast
-  components/               Componentes de interface
-  content/franquias.ts      Conteúdo das 5 redes — editar aqui
-  content/avantcast.ts      Conteúdo do podcast — editar aqui
-  lib/                      Utilitários compartilhados
-public/                     Arquivos estáticos (vídeos e imagens)
-```
-
-## Como adicionar conteúdo
-
-Tudo que é texto, número ou depoimento das redes vive em
-[`src/content/franquias.ts`](src/content/franquias.ts) — não é preciso mexer em
-componente. Para o vídeo de fundo de uma rede, coloque o arquivo em `public/` e
-preencha o campo `video`:
-
-```ts
-video: { src: "/videos/cao-veio.mp4", poster: "/videos/cao-veio.jpg" }
-```
-
-O `poster` é obrigatório: é a imagem exibida antes do vídeo carregar, em
-conexões lentas e para quem ativou "reduzir movimento" no sistema.
-
-## Identidade visual
-
-As cores em `src/app/globals.css` são **provisórias**. Ao receber o manual de
-marca da AVANT, basta substituir os valores das variáveis CSS em `:root` — a
-interface inteira consome apenas esses tokens, então nenhuma outra alteração é
-necessária.
-
-## Variáveis de ambiente
-
-Consulte [`.env.example`](.env.example). O arquivo `.env.local` contém segredos
-e **não** deve ser versionado.
-
-## Abertura da home
-
-Ao abrir o site a tela é dividida em duas faixas: **65% para o vídeo**
-institucional e **35% para o retrato** do sócio-fundador. O vídeo roda **uma
-vez** e congela no quadro final com a assinatura da marca; o conteúdo
-(chamada e CTAs) entra depois.
-
-Os arquivos de vídeo ficam em `public/videos/` e são gerados a partir do
-master `Avant Franquias(Abertura).mp4` (360x640, 7,8s). O retrato é
-`public/imagens/abertura-lucas-camargo.webp` (1188x1324).
-
-| Arquivo                  | Uso                                             |
-| ------------------------ | ----------------------------------------------- |
-| `abertura-mobile.mp4`    | Vertical em 720x1280, faixas empilhadas         |
-| `abertura-desktop.mp4`   | Quase quadrado em 1276x1440, faixas lado a lado |
-| `abertura-final-*.webp`  | Quadro final em alta — é o que fica congelado   |
-| `abertura-inicio-*.webp` | Poster, evita tela preta antes do play          |
-
-Só um vídeo é baixado por dispositivo. O áudio foi removido: autoplay exige
-mudo, então a faixa só ocuparia banda.
-
-### A costura entre as duas faixas
-
-A divisa não é uma linha: as duas imagens se fundem numa faixa de ~8% da
-tela. Quem desvanece é **só o retrato**, por cima do vídeo. Se as duas
-camadas se dissolvessem ao mesmo tempo, no meio da costura apareceria o
-fundo preto por baixo das duas e a junção viraria uma faixa escura.
-
-Por cima da costura ainda passam um `backdrop-blur` mascarado nas duas
-pontas (o desfoque que mistura as bordas) e um brilho difuso na cor da
-marca. O vídeo é desenhado até 72% da tela: a sobra fica escondida debaixo
-da parte já opaca do retrato, então a borda dura dele nunca aparece.
-
-### Onde entra a chamada
-
-Quando a abertura termina, a chamada e os CTAs sobem centrados na página
-inteira — não na faixa do vídeo. Lado a lado eles ficam **no alto**, acima da
-assinatura e sem alcançar o retrato. Empilhado continuam **embaixo**: ali o
-topo da tela é o rosto e o meio é a assinatura, então a base é o único
-espaço livre.
-
-O véu que dá contraste a eles escurece o topo e a base a 70% e deixa o meio
-limpo — é o que mantém a assinatura e o rosto visíveis por baixo.
-
-### A divisão só fica lado a lado em tela larga
-
-A variante `paisagem` de `globals.css` (`min-aspect-ratio: 115/100`) decide o
-arranjo, e o mesmo valor está em `TELA_DIVIDIDA` no componente — os dois
-precisam andar juntos, porque é ele que escolhe o arquivo de vídeo.
-
-| Proporção da tela | Arranjo                             | Vídeo     |
-| ----------------- | ----------------------------------- | --------- |
-| ≥ 115/100         | Vídeo à esquerda, retrato à direita | `desktop` |
-| < 115/100         | Retrato em cima, vídeo embaixo      | `mobile`  |
-
-Abaixo desse limite a faixa do vídeo ficaria mais alta que larga e o
-`object-cover` começaria a comer as **laterais** da assinatura, que sangra
-até as bordas do master. Empilhado isso não acontece: a faixa continua mais
-larga que o vídeo vertical, e o corte volta a ser em cima e embaixo, onde só
-há fundo escuro.
-
-### O desktop é quase quadrado, com margem à direita
-
-O recorte é `crop=360:480` — o dobro da altura real do recorte 3:2 que a
-faixa inteira usava antes, porque agora ele ocupa 65% da largura e não
-precisa mais ser panorâmico. É o ganho de nitidez mais barato que esta fonte
-permite.
-
-Depois do recorte vem `pad=425:480` + `fillborders=right=65:mode=smear`, que
-estica a coluna da borda e cria 65px de margem à direita. Sem ela a
-assinatura — que sangra até o limite do master — terminaria exatamente
-debaixo da costura, e o "T" de AVANT e o "G" de FRANCHISING sumiam sob o
-retrato.
-
-**Limite conhecido:** o master tem 360x640, então o recorte usa 360x480
-pixels reais esticados até 1276 — 3,5x. É o teto desta fonte. Com um
-master em 1080x1920 o `deblock` e o `gradfun` podem sair e a nitidez sobe
-muito.
-
-Sobre a cadeia de filtros: `deblock` e `gradfun` limpam blocagem e banding
-do master (ele veio a 224 kbps); `hqdn3d=0:0:5:9` é denoise **só temporal**
-— os dois primeiros zeros desligam o espacial, que apagaria o traço fino
-antes da ampliação; `cas` (contrast adaptive sharpen) afia sem criar halo,
-e rendeu bordas mais firmes que `unsharp` sozinho.
-
-O quadro congelado não sai de um frame só. Os últimos 30 quadros do master
-são estáticos — diferem entre si apenas 0,13 em 255, ou seja, é o mesmo
-desenho com ruído de compressão diferente por cima. Somando os 30
-(`tmix=frames=30`) o ruído cai por volta de 5x e sobra mais sinal real para
-ampliar. É por isso que a imagem que fica parada na tela é mais limpa que
-qualquer quadro isolado do vídeo.
+Na primeira vez, o Playwright precisa do navegador:
 
 ```bash
-ffmpeg -i master.mp4 -vf "select='between(n,205,234)',crop=360:480:0:81,tmix=frames=30,select='eq(n,29)',pad=425:480:0:0,fillborders=right=65:mode=smear,gradfun=strength=0.8:radius=16,scale=1276:1440:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=3:3:1.0:3:3:0.3,cas=strength=0.75" -frames:v 1 -c:v libwebp -quality 92 public/videos/abertura-final-desktop.webp
+npx playwright install chromium
 ```
 
-O poster sai do primeiro quadro, com a mesma geometria:
-
-```bash
-ffmpeg -i master.mp4 -vf "select='eq(n,0)',crop=360:480:0:81,pad=425:480:0:0,fillborders=right=65:mode=smear,gradfun=strength=1.2:radius=16,scale=1276:1440:flags=lanczos+accurate_rnd+full_chroma_int" -frames:v 1 -c:v libwebp -quality 80 public/videos/abertura-inicio-desktop.webp
-```
-
-Não adianta encodar acima de 1276 de largura: o master tem 425 pixels reais
-depois da margem, então resolução maior só aumenta o arquivo sem acrescentar
-detalhe.
-
-Testados e descartados: `xbr` serrilhou as diagonais; `nnedi` exige um
-arquivo de pesos que não acompanha o ffmpeg. Entre `lanczos`, `spline` e
-`bicubic` a diferença foi imperceptível. Entre CRF 18 e 22 também — daí o
-CRF 20, que dá margem para artefatos de movimento sem inflar o arquivo.
-
-Para regerar depois de receber um master novo:
-
-```bash
-ffmpeg -i master.mp4 -an -vf "deblock=filter=weak:block=8,gradfun=strength=1.2:radius=16,hqdn3d=0:0:5:9,scale=720:1280:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=3:3:0.7:3:3:0.2,cas=strength=0.65" -c:v libx264 -crf 23 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/videos/abertura-mobile.mp4
-```
-
-```bash
-ffmpeg -i master.mp4 -an -vf "crop=360:480:0:81,pad=425:480:0:0,fillborders=right=65:mode=smear,deblock=filter=weak:block=8,gradfun=strength=1.2:radius=16,hqdn3d=0:0:5:9,scale=1276:1440:flags=lanczos+accurate_rnd+full_chroma_int,unsharp=3:3:0.7:3:3:0.2,cas=strength=0.65" -c:v libx264 -crf 20 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/videos/abertura-desktop.mp4
-```
-
-O recorte `crop=360:480:0:81` centraliza a assinatura, que no master ocupa
-`y 254..389`. **Recalcular se o master mudar de resolução.**
-
-O retrato entra sem tratamento, só convertido:
-
-```bash
-ffmpeg -i retrato.jpeg -c:v libwebp -quality 88 -compression_level 6 public/imagens/abertura-lucas-camargo.webp
-```
-
-## Vídeos das redes
-
-Cada card em "Nossas Redes" tem o vídeo institucional da marca em looping,
-com o pôster como fallback. Ficam em `public/videos/rede-<slug>.mp4`.
-
-Os masters vieram do Instagram em 720x1280 e **têm texto queimado na parte de
-baixo** (a partir de ~1,5s). Esse texto seria ilegível no tamanho do card e
-brigaria com o rótulo que já existe por cima, então o recorte
-`crop=720:510:0:235` descarta a faixa do texto e centraliza o logo:
-
-```bash
-ffmpeg -i master.mp4 -an -vf "crop=720:510:0:235" -c:v libx264 -crf 27 -preset slow -pix_fmt yuv420p -movflags +faststart public/videos/rede-<slug>.mp4
-```
-
-Os masters da Don Kebab e da Shogun Team **não** têm texto queimado, então
-ficam verticais, sem recorte — só reescalados para 540x960:
-
-```bash
-ffmpeg -ss <inicio> -t 12 -i master.mp4 -an -vf "scale=540:960:flags=lanczos" -c:v libx264 -crf 30 -preset slow -pix_fmt yuv420p -movflags +faststart public/videos/rede-<slug>.mp4
-```
-
-**Recortar um master vertical em paisagem custa caro.** O mesmo arquivo aparece
-num card quase quadrado e na metade vertical do topo da página da rede; um
-recorte 3:2 vira zoom duplo nos dois lugares, porque o `object-cover` corta de
-novo por cima. Mantido vertical, o quadro chega inteiro na horizontal e o corte
-fica só em cima e embaixo. O recorte acima existe pelo texto queimado, não por
-preferência de formato.
-
-Os vídeos só baixam quando o card entra na tela.
-
-## Galeria e vídeo institucional
-
-Cada rede pode ter uma galeria de fotos (`galeria`) e uma lista de vídeos com
-fala (`apresentacoes`) em `src/content/franquias.ts`. A Move Fitness tem
-dois; as outras, um.
-
-### Eles tocam dentro da página, não num player
-
-Não há moldura, botão de play no meio da tela nem controles de vídeo: o
-arquivo começa quando a rolagem chega nele (55% visível) e para quando sai.
-As bordas se dissolvem no fundo — duas máscaras cruzadas com
-`mask-composite: intersect` apagam os quatro lados — e um brilho da cor da
-rede passa por trás. É o que tira dele o ar de mídia colada no site.
-
-**Começar mudo não é escolha, é a regra dos navegadores:** autoplay com som é
-bloqueado. Como esses vídeos têm fala, o botão de som fica sempre visível, e
-o som toca em um de cada vez — ligar num palco cala os outros. Junto dele há
-um botão de pausa: conteúdo que se move sozinho por mais de cinco segundos
-precisa de controle.
-
-O arquivo entra na fila 600px antes de aparecer e só então recebe o `src`,
-para não competir com o carregamento inicial da página.
-
-### Qualidade dos arquivos
-
-Todos foram refeitos a partir dos masters, em **720x1280**. Quando o master
-cabe no site, o stream é copiado sem recodificar — é o teto de qualidade
-possível, sem perda de geração:
-
-```bash
-ffmpeg -i master.mp4 -c copy -movflags +faststart public/videos/<slug>-<nome>.mp4
-```
-
-A exceção é a convenção do Cão Véio: 2 minutos de master dariam 25 MB. Ela
-sai recodificada, e o CRF é o botão de equilíbrio entre peso e nitidez (25 →
-25 MB, 28 → 19 MB, 31 → 14 MB):
-
-```bash
-ffmpeg -i master.mp4 -vf "scale=720:1280" -c:v libx264 -crf 31 -preset slow -pix_fmt yuv420p -c:a aac -b:a 96k -movflags +faststart public/videos/cao-veio-convencao.mp4
-```
-
-**Vídeo longo pede hospedagem externa.** Esses arquivos vivem no repositório,
-e cada versão fica no histórico para sempre. Passando de ~15 MB, o caminho
-certo é YouTube ou um CDN, não `public/`.
-
-As fotos do Cão Véio vieram de um mosaico 3x3 publicado no Instagram
-(1350x1687). Foram fatiadas em 9 arquivos de 444x556, detectando as
-divisórias pela variação de pixel por linha e coluna:
-
-```bash
-ffmpeg -i mosaico.jpg -vf "crop=444:556:3:3" -c:v libwebp -quality 84 public/imagens/cao-veio-1.webp
-```
-
-Os offsets seguem uma grade de 450x562 — repetir para as 9 células.
-
-## Texto que vinha dentro de imagem
-
-Boa parte do material do cliente é arte de rede social com o texto **dentro
-do JPEG**. Em todos esses casos a regra aqui é a mesma: recortar a foto e
-**transcrever o texto para HTML**. Texto dentro de imagem não é indexado, não
-é lido por leitor de tela, não dá para copiar e fica ilegível no celular.
-
-Os campos que existem para isso:
-
-| Campo      | Uso                                                                  |
-| ---------- | -------------------------------------------------------------------- |
-| `equipe`   | Cards de perfil — retrato, cargo e bio                               |
-| `destaque` | Marco da rede — retrato + mensagem (ex.: os 12 anos da Move Fitness) |
-| `galeria`  | Fotos sem texto, só imagem                                           |
-
-Ao recortar, **conferir se sobrou informação para trás**: a arte quase sempre
-traz números e mensagens que precisam virar conteúdo, não ser descartados
-junto com o corte.
-
-## Equipe da rede
-
-A seção "Quem está por trás da rede" vem de `equipe` em
-`src/content/franquias.ts`. Hoje só a MedInfuse tem.
-
-Os retratos foram recortados dos cards de carrossel do cliente, onde a
-pessoa ocupa a metade direita e o texto a esquerda. **O texto não foi
-mantido dentro da imagem** — foi transcrito para HTML, então reflui em
-qualquer largura, é indexável e chega a leitores de tela:
-
-```bash
-ffmpeg -i card.jpg -vf "crop=490:653:590:130,scale=600:800:flags=lanczos" -c:v libwebp -quality 85 public/imagens/medinfuse-<pessoa>.webp
-```
-
-O card do Dr. Edir tem o texto avançando mais à direita e usa
-`crop=440:587:640:130`. Ao receber cards novos, conferir o recorte antes:
-o offset depende de onde o texto termina.
-
-### Acessibilidade e robustez
-
-- Com "reduzir movimento" ativado, o vídeo não toca: a pessoa vê direto o
-  quadro final.
-- Se o autoplay for bloqueado, a abertura encerra na hora — o conteúdo nunca
-  fica refém de um vídeo que não vai tocar.
-- Há um botão "Pular" durante a reprodução.
-- Sem JavaScript, o quadro final e o conteúdo aparecem normalmente.
-
-## AVANTCAST
-
-A página [`/avantcast`](src/app/avantcast/page.tsx) apresenta o podcast
-institucional: texto do cliente, botão para o canal no YouTube e um carrossel
-com fotos das gravações. O link no cabeçalho fica destacado — o podcast não é
-uma rede, então não entra na sequência das cinco marcas.
-
-Uma versão curta da mesma seção vive na home, entre o portal das redes e o
-funil de consultoria. As duas leem o mesmo `avantcast.ts` e usam o mesmo
-[`BotaoCanal`](src/components/botao-canal.tsx), então o texto e o link do
-canal se mantêm iguais nos dois lugares sozinhos.
-
-Texto, link do canal e legendas das fotos vivem em
-[`src/content/avantcast.ts`](src/content/avantcast.ts).
-
-### O carrossel
-
-O carrossel aparece em dois lugares: na home, entre o portal das redes e o
-funil de consultoria, e na própria página do podcast.
-
-Quem troca de slide é o **scroll do próprio navegador** (`scroll-snap`), não
-um `transform`. Isso entrega de graça o arrasto com o dedo, o scroll lateral
-no trackpad e o comportamento certo para quem navega pelo teclado. O
-indicador escuta o evento de scroll, então o ponto aceso continua correto
-mesmo quando o slide muda sem passar pelos botões.
-
-**O looping é infinito, e não um retorno correndo ao início.** O trilho tem
-uma segunda cópia das fotos no fim: passar da última é entrar nessa cópia, que
-é idêntica. A volta ao início real acontece depois, num salto instantâneo
-feito antes da próxima animação — a tela já mostra a foto certa e ninguém vê
-nada mudar. A cópia leva `aria-hidden`: para um leitor de tela ela seria a
-mesma lista contada duas vezes.
-
-O destino da navegação fica num `ref`, não no estado: com o scroll suave a
-viagem dura algumas centenas de milissegundos, e dois cliques seguidos pelo
-estado leriam o mesmo índice do render anterior — o segundo repetiria o
-primeiro salto em vez de avançar.
-
-Nenhuma das fotos é `lazy`: as próximas ficam fora da área visível do trilho
-e o avanço automático chegaria nelas antes de o carregamento começar. As
-fotos são convertidas com largura máxima de 1200px:
-
-```bash
-ffmpeg -i original.jpg -vf "scale='min(1200,iw)':-2:flags=lanczos" -c:v libwebp -quality 82 -compression_level 6 public/imagens/podcast-<nome>.webp
-```
-
-O avanço automático (5s) para quando o ponteiro está em cima do carrossel,
-quando algo ali dentro recebe foco e para quem pediu "reduzir movimento".
-
-## Don Kebab e Shogun Team
-
-As duas redes entraram a partir de material de redes sociais — fotos e vídeos
-das próprias marcas. O que vale registrar:
-
-**As artes de campanha vieram com texto queimado.** Cinco das nove imagens da
-Don Kebab eram posts com frase sobreposta. O texto foi transcrito para o
-`destaque` da rede em `src/content/franquias.ts` (é HTML de verdade: reflui,
-é indexável e chega a leitores de tela) e a foto entrou recortada, só a parte
-limpa:
-
-```bash
-ffmpeg -i arte.jpg -vf "crop=1080:790:0:290,scale=800:-2:flags=lanczos" -c:v libwebp -quality 84 -compression_level 6 public/imagens/don-kebab-1.webp
-```
-
-O offset muda conforme a frase esteja no topo ou na base — conferir antes.
-
-**Os acentos de marca saíram das fotos.** `--brand` de cada uma é o pixel mais
-saturado do letreiro em neon (Don Kebab, `#f5d401`) e do logo da academia
-(Shogun Team, `#f2760e`), medidos assim:
-
-```bash
-ffmpeg -i foto.jpg -vf "crop=600:260:380:60,scale=40:24" -f rawvideo -pix_fmt rgb24 - | xxd -p -c 3 | awk '{r=strtonum("0x" substr($0,1,2)); g=strtonum("0x" substr($0,3,2)); b=strtonum("0x" substr($0,5,2)); mx=(r>g?(r>b?r:b):(g>b?g:b)); mn=(r<g?(r<b?r:b):(g<b?g:b)); s=(mx>0)?(mx-mn)/mx:0; if(s*mx>best){best=s*mx; c=$0}} END{print "#" c}'
-```
-
-A média simples do recorte não serve: ela puxa para o fundo escuro e devolve
-um marrom. O critério acima (saturação × brilho) isola o traço do neon.
-
-**Números e depoimentos continuam vazios** nas duas. Não há fonte confiável
-para unidades em operação ou investimento — o marcador "A preencher" fica na
-página até o cliente enviar. O papel do Wanderlei Silva na Don Kebab está como
-"Rosto da marca", que é o que o material sustenta; **confirmar se há
-sociedade** antes de publicar.
+## Onde editar o conteúdo
+
+Nenhum texto institucional mora em componente. Tudo fica em `src/data/`:
+
+| Arquivo        | O que tem                                                                   |
+| -------------- | --------------------------------------------------------------------------- |
+| `site.ts`      | WhatsApp, e-mail, endereço, redes sociais, números, navegação, domínio, GTM |
+| `cases.ts`     | Os cases: texto, capa, números com fonte, equipe, galeria e vídeos          |
+| `marcas.ts`    | Marcas e personalidades, com categoria, fonte da prova e `publicar`         |
+| `servicos.ts`  | Os três pilares e os serviços de cada um                                    |
+| `metodo.ts`    | As seis etapas do processo e os dez critérios de franqueabilidade           |
+| `conteudos.ts` | Episódios do AvantCast (ID do YouTube, resumo, convidados, tema)            |
+| `pessoas.ts`   | Liderança da Avant e depoimentos                                            |
+
+### Regra de ouro: nada inventado
+
+- **Relação comercial só com prova.** Toda marca em `marcas.ts` tem `fonte`;
+  sem confirmação, fica com `publicar: false` e não aparece.
+- **Seção vazia some.** Sem depoimento, a seção de depoimentos não renderiza. O
+  mesmo vale para desafio, atuação e números de cada case. Não há placeholder
+  visível ao público.
+- **Os depoimentos do site antigo são falsos** ("Carlos Mendes 02", "Boutique de
+  Moda Eclética") e **nunca** devem ser reaproveitados.
+- **As cinco marcas são cases**, e não redes próprias: o site não afirma
+  sociedade nem propriedade.
+
+### Adicionar um episódio do AvantCast
+
+Acrescente um item em `src/data/conteudos.ts` com o `youtubeId`. A página
+`/conteudos/<slug>`, o sitemap e o card são gerados sozinhos. Os vídeos
+recentes do canal estão no feed público:
+`https://www.youtube.com/feeds/videos.xml?channel_id=UCa7qPDobD7Hvvod7Roc6X8g`
+
+### Adicionar um case
+
+Acrescente um item em `src/data/cases.ts` e a marca correspondente em
+`src/data/marcas.ts` (com `caseSlug` e `fonte`). Só um case pode ter
+`principal: true`: é ele que ganha a vitrine editorial.
+
+## Conversão
+
+Todo CTA passa por `whatsappHref(origem, complemento?)` em
+[`src/lib/contato.ts`](src/lib/contato.ts). O número vive **só** em `site.ts`, e
+cada origem leva uma mensagem própria:
+
+| Origem        | Onde aparece                              |
+| ------------- | ----------------------------------------- |
+| `hero`        | Hero, header, CTA final                   |
+| `diagnostico` | Seção e página do diagnóstico             |
+| `cases`       | Cases (com o nome do case na mensagem)    |
+| `servicos`    | Página de soluções                        |
+| `metodo`      | Seção do método                           |
+| `conteudo`    | Episódios do AvantCast                    |
+| `contato`     | Rodapé, contato, "falar com especialista" |
+
+O componente `LinkWhatsapp` gera o link e, no clique, envia dois eventos ao
+`dataLayer`: `whatsapp_click` e o evento da origem (`hero_cta`,
+`diagnostic_cta`, `case_cta`, `contact_cta`, `content_cta`). Cliques em redes
+sociais geram `social_click`. Tudo está centralizado em
+[`src/lib/rastreamento.ts`](src/lib/rastreamento.ts).
+
+A autoavaliação de `/diagnostico` não dá nota: ela leva os pontos marcados para
+dentro da mensagem do WhatsApp.
+
+## Analytics
+
+O GTM é carregado inline no `<head>` do `layout.tsx`, com `preconnect`,
+**somente** quando `NEXT_PUBLIC_GTM_ID` (ou `site.analytics.gtmId`) está
+preenchido. O site atual não tem GTM nenhum: o ID precisa vir do cliente.
+
+## SEO
+
+- Metadata por página via `criarMetadata()`, em [`src/lib/seo.ts`](src/lib/seo.ts):
+  title, description, canonical, Open Graph e Twitter/X.
+- Imagem de compartilhamento gerada no build (`src/app/opengraph-image.tsx`).
+- `sitemap.xml` e `robots.txt` gerados a partir dos dados. Os previews da Vercel
+  não são indexados.
+- JSON-LD: `Organization` + `ProfessionalService` e `WebSite` em todas as
+  páginas, `BreadcrumbList` nas internas e `VideoObject` nos episódios.
+
+## Design system
+
+Tokens em [`src/app/globals.css`](src/app/globals.css), dentro de `@theme`:
+
+- **Cor:** `--color-background`, `surface`, `text`, `text-muted`, `border`,
+  `brand` (`#DA8E1D`), `brand-dark`, `brand-light`, `accent`, `success` e
+  `error`.
+- **Seção clara:** `.secao-clara` redefine os tokens no próprio escopo. O
+  dourado de texto escurece ali para manter o contraste AA.
+- **Tipografia:** Poppins no corpo e na interface; Instrument Serif só em
+  títulos estratégicos e números grandes. Escala fluida: `text-display`, `h1`,
+  `h2`, `h3`, `lead` e `numero`.
+- **Forma:** cantos quase retos (2–8px), fios finos no lugar de cards e
+  `container-site` com 1320px.
+
+Não use cores literais em componentes, porque a paleta será confirmada com o
+manual de marca.
+
+## Pendências do cliente
+
+| #   | Item                                                                                    | Onde trocar                                         |
+| --- | --------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| 1   | Logo oficial em SVG (hoje há um placeholder tipográfico)                                | `src/components/ui/logo.tsx`, `opengraph-image.tsx` |
+| 2   | ID do Google Tag Manager                                                                | `.env` / `site.ts`                                  |
+| 3   | Domínio final                                                                           | `.env` / `site.ts`                                  |
+| 4   | Razão social, CNPJ e CEP                                                                | `site.ts`                                           |
+| 5   | Depoimentos reais sobre a Avant                                                         | `pessoas.ts`                                        |
+| 6   | Desafio, atuação e resultados de cada case (só a MedInfuse tem atuação)                 | `cases.ts`                                          |
+| 7   | Logos das marcas                                                                        | `marcas.ts`                                         |
+| 8   | Confirmar as credenciais do Lucas (+200 marcas, 2.000 unidades), que hoje estão ocultas | `pessoas.ts`                                        |
+| 9   | Relação com Alice Salazar/AS Store, Kings MMA e Farma&Farma                             | `marcas.ts`                                         |
+| 10  | Se a análise de franqueabilidade continua gratuita                                      | `diagnostico/page.tsx`                              |
+| 11  | Validação jurídica da política de privacidade                                           | `politica-de-privacidade/page.tsx`                  |
+| 12  | Escopo real de cada serviço e se há método oficial                                      | `servicos.ts`, `metodo.ts`                          |
+| 13  | Retrato de Ener Komagata e LinkedIn da empresa                                          | `pessoas.ts`, `site.ts`                             |
+| 14  | Laranja `#FD9400` do logo atual × dourado `#DA8E1D` do site                             | `globals.css`                                       |
+
+## Mídia
+
+`public/` é versionado e o repositório é público: cada versão de um binário fica
+no histórico para sempre.
+
+- Vídeo longo (acima de ~15 MB) vai para o YouTube, não para `public/`.
+- Texto que vem dentro de imagem (arte de rede social) é transcrito para HTML e
+  a foto entra recortada. Texto em imagem não é indexado nem lido por leitor de
+  tela.
+- Imagens entram em `.webp`, já no tamanho de exibição.
+
+Da v1 sobraram em `public/videos/` arquivos que o site novo não usa mais (a
+abertura e os loops `rede-*.mp4`, cerca de 6 MB). Eles foram mantidos até a
+decisão de removê-los.
