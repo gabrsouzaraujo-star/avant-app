@@ -76,6 +76,7 @@ export default async function CasePage({ params }: PageProps<"/cases/[slug]">) {
             <Image
               src={item.capa.src}
               alt={item.capa.alt}
+              style={{ objectPosition: item.capa.foco }}
               fill
               priority
               sizes="(min-width: 1024px) 58vw, 100vw"

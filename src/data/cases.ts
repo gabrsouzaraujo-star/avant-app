@@ -61,6 +61,11 @@ export type Case = {
     altura: number;
     /** `contain` para logos: a imagem aparece inteira, sem corte. */
     ajuste?: "contain";
+    /**
+     * Ponto da foto que nunca pode sair do recorte (object-position), para
+     * quando a capa larga vira retrato nos cards. Ex.: "30% 50%".
+     */
+    foco?: string;
   };
   /** Pessoas publicas ligadas a marca, com o papel que o material sustenta. */
   personalidades: Pessoa[];
@@ -79,8 +84,9 @@ export type Case = {
 
   galeria: Foto[];
   /**
-   * Seis fotos em volta de dois videos, lado a lado: duas em cada lateral e
-   * duas no meio. So vale quando o case tem exatamente dois videos.
+   * Fotos em volta dos videos. Com dois videos: seis fotos, duas em cada
+   * lateral e duas no meio. Com um video: tres fotos, uma de um lado e duas
+   * do outro.
    */
   mosaico?: Foto[];
   equipe: Pessoa[];
@@ -102,10 +108,12 @@ export const cases: Case[] = [
     descricao:
       "Especializada em terapias injetáveis e implantes subcutâneos para emagrecimento, hipertrofia e longevidade. Une medicina integrativa, tecnologia e acompanhamento médico em um modelo pensado para ser replicado por médicos franqueados.",
     capa: {
-      src: "/videos/rede-medinfuse.webp",
-      alt: "Fachada de consultório MedInfuse com o logo da rede",
-      largura: 720,
-      altura: 510,
+      src: "/imagens/medinfuse-recepcao.webp",
+      alt: "Recepção de uma clínica MedInfuse, com o logo iluminado na parede e balcão de mármore",
+      largura: 1600,
+      altura: 900,
+      // O logo fica a esquerda do centro: segura ele dentro do recorte.
+      foco: "32% 50%",
     },
     personalidades: [
       { nome: "Dr. Edir Soccol Jr.", papel: "Fundador" },
@@ -124,6 +132,21 @@ export const cases: Case[] = [
     fonteNumeros: FONTE_VIDEOS,
     depoimentos: [],
     galeria: [],
+    // Fotos das clinicas em volta do video institucional.
+    mosaico: [
+      {
+        src: "/imagens/medinfuse-recepcao-vertical.webp",
+        alt: "Recepção MedInfuse com sofá, plantas e o logo iluminado ao fundo",
+      },
+      {
+        src: "/imagens/medinfuse-letreiro.webp",
+        alt: "Letreiro MedInfuse com a assinatura Emagrecimento, Saúde e Bem-estar",
+      },
+      {
+        src: "/imagens/medinfuse-recepcao-marmore.webp",
+        alt: "Recepção MedInfuse com parede de mármore e logo em relevo iluminado",
+      },
+    ],
     equipe: [
       {
         nome: "Dr. Edir Soccol Jr.",

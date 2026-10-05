@@ -36,9 +36,11 @@ export function VideosImersivos({
 
   if (apresentacoes.length === 0) return null;
 
-  if (apresentacoes.length === 2 && fotos.length >= 6) {
+  const arranjo = ARRANJOS[apresentacoes.length];
+  if (arranjo && fotos.length >= arranjo.fotos.length) {
     return (
       <Mosaico
+        arranjo={arranjo}
         apresentacoes={apresentacoes}
         fotos={fotos}
         titulo={titulo}
@@ -66,37 +68,78 @@ export function VideosImersivos({
   );
 }
 
+type Arranjo = {
+  /** Classes da grade (celular e desktop). */
+  grade: string;
+  /** Posicao de cada foto, na ordem de `mosaico` em data/cases.ts. */
+  fotos: string[];
+  /** Posicao de cada video. */
+  videos: string[];
+  /** Escurece as fotos para que elas fiquem de fundo e o video na frente. */
+  fundo?: boolean;
+};
+
 /*
- * Posicao de cada peca do mosaico. Desktop: cinco colunas — fotos, video,
- * fotos, video, fotos —, com duas fotos empilhadas em cada coluna de fotos.
- * Celular: tres fotos em cima, os dois videos lado a lado e tres fotos
- * embaixo. A grade e uma so, entao nenhuma imagem e baixada duas vezes.
+ * Posicao de cada peca do mosaico, por quantidade de videos. A grade e uma
+ * so em todas as larguras — so muda o lugar de cada peca —, entao nenhuma
+ * imagem e baixada duas vezes.
  */
-const POSICAO_FOTOS = [
-  "col-span-2 col-start-1 row-start-1 lg:col-span-1 lg:col-start-1 lg:row-start-1",
-  "col-span-2 col-start-1 row-start-3 lg:col-span-1 lg:col-start-1 lg:row-start-2",
-  "col-span-2 col-start-3 row-start-1 lg:col-span-1 lg:col-start-3 lg:row-start-1",
-  "col-span-2 col-start-3 row-start-3 lg:col-span-1 lg:col-start-3 lg:row-start-2",
-  "col-span-2 col-start-5 row-start-1 lg:col-span-1 lg:col-start-5 lg:row-start-1",
-  "col-span-2 col-start-5 row-start-3 lg:col-span-1 lg:col-start-5 lg:row-start-2",
-];
-const POSICAO_VIDEOS = [
-  "col-span-3 col-start-1 row-start-2 lg:col-span-1 lg:col-start-2 lg:row-span-2 lg:row-start-1",
-  "col-span-3 col-start-4 row-start-2 lg:col-span-1 lg:col-start-4 lg:row-span-2 lg:row-start-1",
-];
+const ARRANJOS: Record<number, Arranjo> = {
+  /*
+   * Um video: no desktop, uma foto vertical a esquerda, o video no centro e
+   * duas fotos empilhadas a direita. No celular, a foto vertical ao lado do
+   * video e as outras duas embaixo.
+   */
+  1: {
+    grade:
+      "container-site grid-cols-6 lg:grid-cols-[1.3fr_1fr_1.3fr] lg:grid-rows-2",
+    fotos: [
+      "col-span-2 col-start-1 row-span-2 row-start-1 lg:col-span-1 lg:col-start-1",
+      "col-span-3 col-start-1 row-start-3 aspect-video lg:col-span-1 lg:col-start-3 lg:row-start-1",
+      "col-span-3 col-start-4 row-start-3 aspect-video lg:col-span-1 lg:col-start-3 lg:row-start-2",
+    ],
+    videos: [
+      "col-span-4 col-start-3 row-span-2 row-start-1 lg:col-span-1 lg:col-start-2",
+    ],
+    fundo: true,
+  },
+  /*
+   * Dois videos: no desktop, cinco colunas — fotos, video, fotos, video,
+   * fotos —, com duas fotos empilhadas em cada coluna de fotos. No celular,
+   * tres fotos em cima, os dois videos lado a lado e tres fotos embaixo.
+   */
+  2: {
+    grade:
+      "mx-auto w-full max-w-[1600px] grid-cols-6 px-[clamp(1rem,0.5rem+2.5vw,2.5rem)] lg:grid-cols-[1fr_1.2fr_1fr_1.2fr_1fr] lg:grid-rows-2",
+    fotos: [
+      "col-span-2 col-start-1 row-start-1 aspect-[4/5] lg:col-span-1 lg:col-start-1 lg:row-start-1",
+      "col-span-2 col-start-1 row-start-3 aspect-[4/5] lg:col-span-1 lg:col-start-1 lg:row-start-2",
+      "col-span-2 col-start-3 row-start-1 aspect-[4/5] lg:col-span-1 lg:col-start-3 lg:row-start-1",
+      "col-span-2 col-start-3 row-start-3 aspect-[4/5] lg:col-span-1 lg:col-start-3 lg:row-start-2",
+      "col-span-2 col-start-5 row-start-1 aspect-[4/5] lg:col-span-1 lg:col-start-5 lg:row-start-1",
+      "col-span-2 col-start-5 row-start-3 aspect-[4/5] lg:col-span-1 lg:col-start-5 lg:row-start-2",
+    ],
+    videos: [
+      "col-span-3 col-start-1 row-start-2 lg:col-span-1 lg:col-start-2 lg:row-span-2 lg:row-start-1",
+      "col-span-3 col-start-4 row-start-2 lg:col-span-1 lg:col-start-4 lg:row-span-2 lg:row-start-1",
+    ],
+  },
+};
 
 /**
- * Dois videos lado a lado, cercados de fotos: duas em cada lateral e duas no
- * meio. Os videos seguem a mesma regra dos palcos — tocam mudos e em loop
- * enquanto estao na tela, e o som liga em um de cada vez.
+ * Videos cercados de fotos (um ou dois, ver `ARRANJOS`). Os videos seguem a
+ * mesma regra dos palcos — tocam mudos e em loop enquanto estao na tela, e o
+ * som liga em um de cada vez.
  */
 function Mosaico({
+  arranjo,
   apresentacoes,
   fotos,
   titulo,
   comSom,
   aoAlternarSom,
 }: {
+  arranjo: Arranjo;
   apresentacoes: Apresentacao[];
   fotos: Foto[];
   titulo: string;
@@ -107,22 +150,28 @@ function Mosaico({
     <section className="secao relative overflow-hidden">
       <h2 className="container-site text-h2 font-semibold">{titulo}</h2>
 
-      <div className="mx-auto mt-12 grid w-full max-w-[1600px] grid-cols-6 gap-2 px-[clamp(1rem,0.5rem+2.5vw,2.5rem)] sm:gap-3 lg:grid-cols-[1fr_1.2fr_1fr_1.2fr_1fr] lg:grid-rows-2">
-        {fotos.slice(0, 6).map((foto, indice) => (
+      <div className={cn("mt-12 grid gap-2 sm:gap-3", arranjo.grade)}>
+        {fotos.slice(0, arranjo.fotos.length).map((foto, indice) => (
           <div
             key={foto.src}
             className={cn(
-              "bg-surface relative aspect-[4/5] overflow-hidden lg:aspect-auto",
-              POSICAO_FOTOS[indice],
+              "bg-surface relative overflow-hidden lg:aspect-auto",
+              arranjo.fotos[indice],
             )}
           >
             <Image
               src={foto.src}
               alt={foto.alt}
               fill
-              sizes="(min-width: 1024px) 18vw, 33vw"
+              sizes="(min-width: 1024px) 30vw, 50vw"
               className="object-cover"
             />
+            {arranjo.fundo && (
+              <span
+                aria-hidden="true"
+                className="bg-background/35 absolute inset-0"
+              />
+            )}
           </div>
         ))}
 
@@ -131,7 +180,7 @@ function Mosaico({
             key={apresentacao.src}
             apresentacao={apresentacao}
             compacto
-            className={POSICAO_VIDEOS[indice]}
+            className={arranjo.videos[indice]}
             comSom={comSom === apresentacao.src}
             aoAlternarSom={(ligado) =>
               aoAlternarSom(ligado ? apresentacao.src : null)

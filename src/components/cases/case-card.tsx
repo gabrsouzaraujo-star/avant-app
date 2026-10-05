@@ -21,6 +21,7 @@ export function CaseCard({ item, className, nivel: Titulo = "h3" }: Props) {
         <Image
           src={item.capa.src}
           alt={item.capa.alt}
+          style={{ objectPosition: item.capa.foco }}
           fill
           sizes="(min-width: 1024px) 25vw, 50vw"
           className={cn(
