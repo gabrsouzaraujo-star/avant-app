@@ -409,10 +409,12 @@ export const cases: Case[] = [
     descricao:
       "Comida árabe de rua em casa própria: kebab no espeto vertical, wraps montados na hora, falafel e porções. Operação de balcão e fachada em neon — o modelo nasceu em Curitiba e chegou a São José dos Campos em 2025.",
     capa: {
-      src: "/imagens/don-kebab-destaque.webp",
-      alt: "Wanderlei Silva com uma sacola da rede, sob o letreiro em neon da Don Kebab",
+      src: "/imagens/don-kebab-logo.webp",
+      alt: "Logo da Don Kebab: casa com lua e estrela, o nome da marca e a assinatura Arab Street Food",
       largura: 800,
-      altura: 592,
+      altura: 800,
+      // Logo branco com fundo transparente: mostrar inteiro.
+      ajuste: "contain",
     },
     personalidades: [
       // O material sustenta "rosto da marca" — nao afirmar sociedade.
@@ -422,7 +424,13 @@ export const cases: Case[] = [
     atuacao: [],
     numeros: [],
     depoimentos: [],
-    galeria: [
+    // Todas as fotos da rede ficam em volta do video (quatro de cada lado).
+    galeria: [],
+    mosaico: [
+      {
+        src: "/imagens/don-kebab-destaque.webp",
+        alt: "Wanderlei Silva com uma sacola da rede, sob o letreiro em neon da Don Kebab",
+      },
       {
         src: "/imagens/don-kebab-4.webp",
         alt: "Três sócios diante do letreiro em neon da marca, dentro da loja",
@@ -432,20 +440,24 @@ export const cases: Case[] = [
         alt: "Wrap recheado servido no papel",
       },
       {
-        src: "/imagens/don-kebab-6.webp",
-        alt: "Noite de operação na calçada, com a fachada iluminada ao fundo",
+        src: "/imagens/don-kebab-7.webp",
+        alt: "Sócios em frente à unidade em noite de casa cheia",
       },
       {
         src: "/imagens/don-kebab-5.webp",
         alt: "Equipe da unidade reunida sob o letreiro em neon",
       },
       {
-        src: "/imagens/don-kebab-3.webp",
-        alt: "Brinde com chope no salão da unidade",
+        src: "/imagens/don-kebab-6.webp",
+        alt: "Noite de operação na calçada, com a fachada iluminada ao fundo",
       },
       {
-        src: "/imagens/don-kebab-7.webp",
-        alt: "Sócios em frente à unidade em noite de casa cheia",
+        src: "/imagens/don-kebab-1.webp",
+        alt: "Placa circular da Don Kebab na fachada, vista de baixo contra o céu",
+      },
+      {
+        src: "/imagens/don-kebab-3.webp",
+        alt: "Brinde com chope no salão da unidade",
       },
     ],
     equipe: [],

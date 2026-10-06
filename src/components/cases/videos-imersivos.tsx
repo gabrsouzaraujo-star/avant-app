@@ -36,8 +36,13 @@ export function VideosImersivos({
 
   if (apresentacoes.length === 0) return null;
 
-  const arranjo = ARRANJOS[apresentacoes.length];
-  if (arranjo && fotos.length >= arranjo.fotos.length) {
+  // O arranjo com mais fotos que caiba no que o case tem.
+  const arranjo = ARRANJOS.filter(
+    (opcao) =>
+      opcao.videos.length === apresentacoes.length &&
+      fotos.length >= opcao.fotos.length,
+  ).sort((a, b) => b.fotos.length - a.fotos.length)[0];
+  if (arranjo) {
     return (
       <Mosaico
         arranjo={arranjo}
@@ -80,17 +85,17 @@ type Arranjo = {
 };
 
 /*
- * Posicao de cada peca do mosaico, por quantidade de videos. A grade e uma
- * so em todas as larguras — so muda o lugar de cada peca —, entao nenhuma
- * imagem e baixada duas vezes.
+ * Posicao de cada peca do mosaico, por quantidade de videos e de fotos. A
+ * grade e uma so em todas as larguras — so muda o lugar de cada peca —, entao
+ * nenhuma imagem e baixada duas vezes.
  */
-const ARRANJOS: Record<number, Arranjo> = {
+const ARRANJOS: Arranjo[] = [
   /*
    * Um video: no desktop, uma foto vertical a esquerda, o video no centro e
    * duas fotos empilhadas a direita. No celular, a foto vertical ao lado do
    * video e as outras duas embaixo.
    */
-  1: {
+  {
     grade:
       "container-site grid-cols-6 lg:grid-cols-[1.3fr_1fr_1.3fr] lg:grid-rows-2",
     fotos: [
@@ -104,11 +109,33 @@ const ARRANJOS: Record<number, Arranjo> = {
     fundo: true,
   },
   /*
+   * Um video e oito fotos: no desktop, quatro fotos (2x2) de cada lado do
+   * video. No celular, quatro fotos em cima, o video no meio com uma foto
+   * estreita de cada lado e duas fotos largas embaixo.
+   */
+  {
+    grade:
+      "mx-auto w-full max-w-[1600px] grid-cols-4 px-[clamp(1rem,0.5rem+2.5vw,2.5rem)] lg:grid-cols-[1fr_1fr_1.3fr_1fr_1fr] lg:grid-rows-2",
+    fotos: [
+      "col-start-1 row-start-1 aspect-[4/5] lg:col-start-1 lg:row-start-1",
+      "col-start-2 row-start-1 aspect-[4/5] lg:col-start-2 lg:row-start-1",
+      "col-start-3 row-start-1 aspect-[4/5] lg:col-start-1 lg:row-start-2",
+      "col-start-4 row-start-1 aspect-[4/5] lg:col-start-2 lg:row-start-2",
+      "col-start-1 row-start-2 lg:col-start-4 lg:row-start-1",
+      "col-start-4 row-start-2 lg:col-start-5 lg:row-start-1",
+      "col-span-2 col-start-1 row-start-3 aspect-video lg:col-span-1 lg:col-start-4 lg:row-start-2",
+      "col-span-2 col-start-3 row-start-3 aspect-video lg:col-span-1 lg:col-start-5 lg:row-start-2",
+    ],
+    videos: [
+      "col-span-2 col-start-2 row-start-2 lg:col-span-1 lg:col-start-3 lg:row-span-2 lg:row-start-1",
+    ],
+  },
+  /*
    * Dois videos: no desktop, cinco colunas — fotos, video, fotos, video,
    * fotos —, com duas fotos empilhadas em cada coluna de fotos. No celular,
    * tres fotos em cima, os dois videos lado a lado e tres fotos embaixo.
    */
-  2: {
+  {
     grade:
       "mx-auto w-full max-w-[1600px] grid-cols-6 px-[clamp(1rem,0.5rem+2.5vw,2.5rem)] lg:grid-cols-[1fr_1.2fr_1fr_1.2fr_1fr] lg:grid-rows-2",
     fotos: [
@@ -124,10 +151,10 @@ const ARRANJOS: Record<number, Arranjo> = {
       "col-span-3 col-start-4 row-start-2 lg:col-span-1 lg:col-start-4 lg:row-span-2 lg:row-start-1",
     ],
   },
-};
+];
 
 /**
- * Videos cercados de fotos (um ou dois, ver `ARRANJOS`). Os videos seguem a
+ * Videos cercados de fotos (ver `ARRANJOS`). Os videos seguem a
  * mesma regra dos palcos — tocam mudos e em loop enquanto estao na tela, e o
  * som liga em um de cada vez.
  */
