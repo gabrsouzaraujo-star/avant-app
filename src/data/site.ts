@@ -118,3 +118,14 @@ export const navegacao = [
   { rotulo: "Conteúdo", href: "/conteudos" },
   { rotulo: "Contato", href: "/contato" },
 ] as const;
+
+/**
+ * Video da secao "O ponto de partida", na home. Arquivo enviado pelo cliente
+ * em 2026-10-06; o titulo e o texto que aparece no proprio video.
+ */
+export const videoPontoDePartida = {
+  src: "/videos/ponto-de-partida.mp4",
+  poster: "/videos/ponto-de-partida.webp",
+  titulo: "5 erros antes de comprar uma franquia",
+  chamada: "vídeo da AVANT Franchising",
+};

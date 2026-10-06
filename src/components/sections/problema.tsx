@@ -1,5 +1,7 @@
 import { Revelar } from "@/components/ui/revelar";
 import { TituloSecao } from "@/components/ui/titulo-secao";
+import { VideoEmFoco } from "@/components/ui/video-em-foco";
+import { videoPontoDePartida } from "@/data/site";
 
 const riscos = [
   {
@@ -28,12 +30,23 @@ export function Problema() {
   return (
     <section aria-labelledby="problema-titulo" className="secao-clara secao">
       <div className="container-site grid gap-14 lg:grid-cols-12">
+        {/* O titulo ocupa a linha toda: assim o video fica ao lado do texto
+            e da lista, e as duas colunas terminam juntas. */}
+        <TituloSecao
+          id="problema-titulo"
+          sobretitulo="O ponto de partida"
+          serif
+          titulo="Ter sucesso não significa estar pronto para franquear."
+          className="lg:col-span-12"
+        />
+
+        {/* A largura sai da altura que cabe na tela: o video so toca e ganha
+            som quando aparece inteiro, entao ele nunca pode ser maior que o
+            visor. */}
         <div className="lg:col-span-5">
-          <TituloSecao
-            id="problema-titulo"
-            sobretitulo="O ponto de partida"
-            serif
-            titulo="Ter sucesso não significa estar pronto para franquear."
+          <VideoEmFoco
+            apresentacao={videoPontoDePartida}
+            className="mx-auto w-[min(100%,calc((100svh-9rem)*0.5625))] lg:mx-0 lg:w-[min(100%,calc((100svh-10rem)*0.5625),26rem)]"
           />
         </div>
 
