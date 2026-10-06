@@ -41,6 +41,7 @@ export default function SobrePage() {
   return (
     <>
       <CabecalhoPagina
+        mosaico
         trilha={[{ nome: "Sobre", caminho: "/sobre" }]}
         sobretitulo="Sobre a Avant"
         titulo={`Desde ${site.fundacao}, transformando empresas em redes de franquias.`}

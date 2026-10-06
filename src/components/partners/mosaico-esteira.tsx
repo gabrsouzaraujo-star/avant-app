@@ -1,14 +1,19 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 
-/** Quatro faixas, cada uma comecando num ponto diferente da lista de fotos. */
+/**
+ * Quatro faixas, cada uma comecando num ponto diferente da lista de fotos.
+ * `recuo` desencontra as faixas quando o mosaico esta congelado, para as
+ * fotos nao formarem colunas retas.
+ */
 const FAIXAS = [
-  { inicio: 0, duracao: "140s", reversa: false },
-  { inicio: 5, duracao: "120s", reversa: true },
-  { inicio: 10, duracao: "150s", reversa: false },
-  { inicio: 15, duracao: "130s", reversa: true },
+  { inicio: 0, duracao: "140s", reversa: false, recuo: "0%" },
+  { inicio: 5, duracao: "120s", reversa: true, recuo: "-4%" },
+  { inicio: 10, duracao: "150s", reversa: false, recuo: "-1.5%" },
+  { inicio: 15, duracao: "130s", reversa: true, recuo: "-6%" },
 ];
 
 /**
@@ -22,21 +27,28 @@ const FAIXAS = [
  *   secao.
  * - As quatro faixas dividem a altura do container, entao o mosaico cobre a
  *   secao inteira em qualquer largura.
+ * - `congelado`: o mesmo mosaico, parado. E o fundo do topo das paginas
+ *   internas — ja nasce no HTML, sem esperar a rolagem. Quem pede menos
+ *   movimento no sistema tambem ve a esteira parada.
  */
 export function MosaicoEsteira({
   fotos,
+  congelado = false,
   className,
 }: {
   fotos: string[];
+  congelado?: boolean;
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [carregar, setCarregar] = useState(false);
+  const [carregar, setCarregar] = useState(congelado);
   const [visivel, setVisivel] = useState(false);
+  const semMovimento = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const parado = congelado || semMovimento;
 
   useEffect(() => {
     const elemento = ref.current;
-    if (!elemento) return;
+    if (!elemento || congelado) return;
 
     const observador = new IntersectionObserver(
       ([entrada]) => {
@@ -47,7 +59,7 @@ export function MosaicoEsteira({
     );
     observador.observe(elemento);
     return () => observador.disconnect();
-  }, []);
+  }, [congelado]);
 
   return (
     <div
@@ -65,11 +77,15 @@ export function MosaicoEsteira({
             <div
               key={faixa.inicio}
               className="flex min-h-0 w-max flex-1 gap-3"
-              style={{
-                animation: `esteira ${faixa.duracao} linear infinite`,
-                animationDirection: faixa.reversa ? "reverse" : "normal",
-                animationPlayState: visivel ? "running" : "paused",
-              }}
+              style={
+                parado
+                  ? { transform: `translateX(${faixa.recuo})` }
+                  : {
+                      animation: `esteira ${faixa.duracao} linear infinite`,
+                      animationDirection: faixa.reversa ? "reverse" : "normal",
+                      animationPlayState: visivel ? "running" : "paused",
+                    }
+              }
             >
               {[...ordem, ...ordem].map((src, indice) => (
                 // eslint-disable-next-line @next/next/no-img-element -- arquivos ja otimizados (640px, webp); sem o otimizador, cada foto e baixada uma vez so, e nao uma por largura

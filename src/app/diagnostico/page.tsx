@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Autoavaliacao } from "@/components/diagnostico/autoavaliacao";
 import { CabecalhoPagina } from "@/components/layout/cabecalho-pagina";
 import { CtaFinal } from "@/components/sections/cta-final";
@@ -5,6 +6,7 @@ import { Metodo } from "@/components/sections/metodo";
 import { LinkWhatsapp } from "@/components/ui/link-whatsapp";
 import { TituloSecao } from "@/components/ui/titulo-secao";
 import { criterios } from "@/data/metodo";
+import { fundador } from "@/data/pessoas";
 import { criarMetadata } from "@/lib/seo";
 
 export const metadata = criarMetadata({
@@ -31,6 +33,7 @@ export default function DiagnosticoPage() {
   return (
     <>
       <CabecalhoPagina
+        mosaico
         trilha={[{ nome: "Diagnóstico", caminho: "/diagnostico" }]}
         sobretitulo="Análise de franqueabilidade"
         titulo="Seu negócio está pronto para virar uma franquia?"
@@ -43,13 +46,29 @@ export default function DiagnosticoPage() {
 
       <section aria-labelledby="perfis-titulo" className="secao-clara secao">
         <div className="container-site grid gap-12 lg:grid-cols-12">
-          <TituloSecao
-            id="perfis-titulo"
-            sobretitulo="Para quem é"
-            serif
-            titulo="A análise é para o empresário que…"
-            className="lg:col-span-5"
-          />
+          <div className="lg:col-span-5">
+            <TituloSecao
+              id="perfis-titulo"
+              sobretitulo="Para quem é"
+              serif
+              titulo="A análise é para o empresário que…"
+            />
+
+            {/* Quem conduz a analise, diante do mural da rede. */}
+            <figure className="relative mt-10 aspect-[1188/1324] max-w-md overflow-hidden">
+              <Image
+                src={fundador.foto}
+                alt={fundador.fotoAlt}
+                fill
+                sizes="(min-width: 1024px) 28rem, 100vw"
+                className="object-cover object-top"
+              />
+              <figcaption className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/75 to-transparent p-6 pt-16 text-sm text-white">
+                <span className="block font-medium">{fundador.nome}</span>
+                <span className="text-white/75">{fundador.papel}</span>
+              </figcaption>
+            </figure>
+          </div>
           <ul className="border-border border-t lg:col-span-6 lg:col-start-7">
             {perfis.map((perfil, indice) => (
               <li
