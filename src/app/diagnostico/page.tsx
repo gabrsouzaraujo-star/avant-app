@@ -44,47 +44,57 @@ export default function DiagnosticoPage() {
         </LinkWhatsapp>
       </CabecalhoPagina>
 
-      <section aria-labelledby="perfis-titulo" className="secao-clara secao">
-        <div className="container-site grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-5">
+      {/* Mesma estrutura de "O ponto de partida": no desktop a secao cabe
+          numa tela abaixo do cabecalho, a foto a esquerda com a altura que
+          sobra e titulo e perfis a direita. No celular: titulo, foto, perfis. */}
+      <section
+        aria-labelledby="perfis-titulo"
+        className="secao-clara secao lg:flex lg:min-h-svh lg:items-center lg:pt-24 lg:pb-8"
+      >
+        <div className="container-site grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-x-12">
+          <div className="contents lg:col-span-6 lg:col-start-7 lg:block">
             <TituloSecao
               id="perfis-titulo"
               sobretitulo="Para quem é"
               serif
+              compacto
               titulo="A análise é para o empresário que…"
+              className="order-1"
             />
 
-            {/* Quem conduz a analise, diante do mural da rede. */}
-            <figure className="relative mt-10 aspect-[1188/1324] max-w-md overflow-hidden">
-              <Image
-                src={fundador.foto}
-                alt={fundador.fotoAlt}
-                fill
-                sizes="(min-width: 1024px) 28rem, 100vw"
-                className="object-cover object-top"
-              />
-              <figcaption className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/75 to-transparent p-6 pt-16 text-sm text-white">
-                <span className="block font-medium">{fundador.nome}</span>
-                <span className="text-white/75">{fundador.papel}</span>
-              </figcaption>
-            </figure>
-          </div>
-          <ul className="border-border border-t lg:col-span-6 lg:col-start-7">
-            {perfis.map((perfil, indice) => (
-              <li
-                key={perfil}
-                className="border-border grid grid-cols-[3rem_1fr] gap-4 border-b py-6"
-              >
-                <span
-                  className="text-brand-text font-serif text-2xl"
-                  aria-hidden="true"
+            <ul className="border-border order-3 border-t lg:mt-10">
+              {perfis.map((perfil, indice) => (
+                <li
+                  key={perfil}
+                  className="border-border grid grid-cols-[3rem_1fr] gap-4 border-b py-6"
                 >
-                  0{indice + 1}
-                </span>
-                <span className="text-lead">{perfil}</span>
-              </li>
-            ))}
-          </ul>
+                  <span
+                    className="text-brand-text font-serif text-2xl"
+                    aria-hidden="true"
+                  >
+                    0{indice + 1}
+                  </span>
+                  <span className="text-lead">{perfil}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Quem conduz a analise, diante do mural da rede. A largura sai da
+              altura que cabe na tela. */}
+          <figure className="relative order-2 mx-auto aspect-[1188/1324] w-full max-w-md overflow-hidden lg:order-first lg:col-span-6 lg:mx-0 lg:w-[min(100%,calc((100svh-8rem)*0.897))] lg:max-w-none">
+            <Image
+              src={fundador.foto}
+              alt={fundador.fotoAlt}
+              fill
+              sizes="(min-width: 1024px) 45vw, 100vw"
+              className="object-cover object-top"
+            />
+            <figcaption className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/75 to-transparent p-6 pt-16 text-sm text-white">
+              <span className="block font-medium">{fundador.nome}</span>
+              <span className="text-white/75">{fundador.papel}</span>
+            </figcaption>
+          </figure>
         </div>
       </section>
 
