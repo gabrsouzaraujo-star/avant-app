@@ -27,6 +27,8 @@ type Props = {
   descricao?: React.ReactNode;
   /** `serif` reserva a serifada editorial para os titulos estrategicos. */
   serif?: boolean;
+  /** Serifada um degrau menor, para secoes que precisam caber numa tela. */
+  compacto?: boolean;
   centralizado?: boolean;
   as?: "h1" | "h2";
   id?: string;
@@ -38,6 +40,7 @@ export function TituloSecao({
   titulo,
   descricao,
   serif = false,
+  compacto = false,
   centralizado = false,
   as: Tag = "h2",
   id,
@@ -57,7 +60,9 @@ export function TituloSecao({
         className={cn(
           "text-balance",
           sobretitulo && "mt-5",
-          serif ? "text-h1 font-serif font-normal" : "text-h2 font-medium",
+          serif
+            ? cn(compacto ? "text-h2" : "text-h1", "font-serif font-normal")
+            : "text-h2 font-medium",
         )}
       >
         {titulo}

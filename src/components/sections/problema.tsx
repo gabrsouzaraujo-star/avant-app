@@ -25,62 +25,73 @@ const riscos = [
  * O problema que a Avant resolve, dito em voz de quem entende do assunto:
  * sucesso de uma unidade nao e o mesmo que franqueabilidade. Secao clara para
  * quebrar o ritmo escuro da home e marcar a virada de argumento.
+ *
+ * No desktop a secao cabe inteira numa tela, abaixo do cabecalho fixo: o
+ * video a esquerda, com a altura que sobra, e titulo, texto e os tres riscos
+ * a direita. No celular a ordem e titulo, video e texto.
  */
 export function Problema() {
   return (
-    <section aria-labelledby="problema-titulo" className="secao-clara secao">
-      <div className="container-site grid gap-14 lg:grid-cols-12">
-        {/* O titulo ocupa a linha toda: assim o video fica ao lado do texto
-            e da lista, e as duas colunas terminam juntas. */}
-        <TituloSecao
-          id="problema-titulo"
-          sobretitulo="O ponto de partida"
-          serif
-          titulo="Ter sucesso não significa estar pronto para franquear."
-          className="lg:col-span-12"
-        />
+    <section
+      aria-labelledby="problema-titulo"
+      className="secao-clara secao lg:flex lg:min-h-svh lg:items-center lg:pt-24 lg:pb-8"
+    >
+      <div className="container-site grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-x-12">
+        {/* `contents` no celular deixa titulo e texto entrarem na grade da
+            secao, um de cada lado do video; no desktop viram uma coluna. */}
+        <div className="contents lg:col-span-7 lg:col-start-6 lg:block">
+          <TituloSecao
+            id="problema-titulo"
+            sobretitulo="O ponto de partida"
+            serif
+            compacto
+            titulo="Ter sucesso não significa estar pronto para franquear."
+            className="order-1"
+          />
+
+          <div className="order-3">
+            <p className="text-lead text-pretty lg:mt-6">
+              Uma franquia não replica o sucesso de uma empresa — replica o
+              modelo que produz esse sucesso. Transformar um negócio em rede
+              exige provar que ele funciona sem o dono, nas mãos de outra pessoa
+              e em outra cidade.
+            </p>
+
+            <ol className="border-border mt-8 grid border-t lg:mt-10 lg:grid-cols-3 lg:gap-8 lg:border-t-0">
+              {riscos.map((risco, indice) => (
+                <Revelar
+                  as="li"
+                  key={risco.titulo}
+                  atraso={indice * 0.08}
+                  className="border-border grid grid-cols-[3rem_1fr] gap-4 border-b py-6 lg:block lg:border-t lg:border-b-0 lg:pt-5 lg:pb-0"
+                >
+                  <span
+                    className="text-brand-text font-serif text-2xl lg:block"
+                    aria-hidden="true"
+                  >
+                    0{indice + 1}
+                  </span>
+                  <div className="lg:mt-3">
+                    <h3 className="text-lg font-medium">{risco.titulo}</h3>
+                    <p className="text-text-muted mt-2 text-sm leading-relaxed">
+                      {risco.texto}
+                    </p>
+                  </div>
+                </Revelar>
+              ))}
+            </ol>
+          </div>
+        </div>
 
         {/* A largura sai da altura que cabe na tela: o video so toca e ganha
             som quando aparece inteiro, entao ele nunca pode ser maior que o
-            visor. */}
-        <div className="lg:col-span-5">
+            visor. No desktop ocupa a altura toda que sobra abaixo do
+            cabecalho. */}
+        <div className="order-2 lg:order-first lg:col-span-5">
           <VideoEmFoco
             apresentacao={videoPontoDePartida}
-            className="mx-auto w-[min(100%,calc((100svh-9rem)*0.5625))] lg:mx-0 lg:w-[min(100%,calc((100svh-10rem)*0.5625),26rem)]"
+            className="mx-auto w-[min(100%,calc((100svh-9rem)*0.5625))] lg:w-[min(100%,calc((100svh-8rem)*0.5625))]"
           />
-        </div>
-
-        <div className="lg:col-span-6 lg:col-start-7">
-          <p className="text-lead text-pretty">
-            Uma franquia não replica o sucesso de uma empresa — replica o modelo
-            que produz esse sucesso. Transformar um negócio em rede exige provar
-            que ele funciona sem o dono, nas mãos de outra pessoa e em outra
-            cidade.
-          </p>
-
-          <ol className="border-border mt-12 border-t">
-            {riscos.map((risco, indice) => (
-              <Revelar
-                as="li"
-                key={risco.titulo}
-                atraso={indice * 0.08}
-                className="border-border grid grid-cols-[3rem_1fr] gap-4 border-b py-8"
-              >
-                <span
-                  className="text-brand-text font-serif text-2xl"
-                  aria-hidden="true"
-                >
-                  0{indice + 1}
-                </span>
-                <div>
-                  <h3 className="text-h3 font-medium">{risco.titulo}</h3>
-                  <p className="text-text-muted mt-2 leading-relaxed">
-                    {risco.texto}
-                  </p>
-                </div>
-              </Revelar>
-            ))}
-          </ol>
         </div>
       </div>
     </section>
