@@ -13,7 +13,12 @@ for (const rota of rotas) {
     });
     page.on("pageerror", (erro) => erros.push(String(erro)));
 
-    const resposta = await page.goto(rota);
+    // Nao espera o evento "load": com varios workers em paralelo, o
+    // otimizador de imagens do `next start` gera tudo pela primeira vez e as
+    // paginas com muitas fotos (cases) passam dos 30s. As imagens sao
+    // conferidas mais abaixo, depois da rolagem e do networkidle.
+    test.setTimeout(90_000);
+    const resposta = await page.goto(rota, { waitUntil: "domcontentloaded" });
     expect(resposta?.status()).toBe(200);
 
     await expect(page.locator("h1")).toHaveCount(1);
