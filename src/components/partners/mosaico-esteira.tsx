@@ -28,8 +28,9 @@ const FAIXAS = [
  * - As quatro faixas dividem a altura do container, entao o mosaico cobre a
  *   secao inteira em qualquer largura.
  * - `congelado`: o mesmo mosaico, parado. E o fundo do topo das paginas
- *   internas — ja nasce no HTML, sem esperar a rolagem. Quem pede menos
- *   movimento no sistema tambem ve a esteira parada.
+ *   internas — ja nasce no HTML, sem esperar a rolagem, e so baixa as fotos
+ *   que aparecem no recorte. Quem pede menos movimento no sistema tambem ve
+ *   a esteira parada.
  */
 export function MosaicoEsteira({
   fotos,
@@ -87,7 +88,10 @@ export function MosaicoEsteira({
                     }
               }
             >
-              {[...ordem, ...ordem].map((src, indice) => (
+              {/* Parado, nao precisa da segunda copia que fecha o loop, e o
+                  lazy so baixa o que cabe no recorte: a esteira nao traz
+                  foto nova para a tela. */}
+              {(parado ? ordem : [...ordem, ...ordem]).map((src, indice) => (
                 // eslint-disable-next-line @next/next/no-img-element -- arquivos ja otimizados (640px, webp); sem o otimizador, cada foto e baixada uma vez so, e nao uma por largura
                 <img
                   key={`${src}-${indice}`}
@@ -96,6 +100,7 @@ export function MosaicoEsteira({
                   width={640}
                   height={640}
                   decoding="async"
+                  loading={parado ? "lazy" : undefined}
                   className="bg-surface aspect-square h-full w-auto shrink-0 object-cover"
                 />
               ))}

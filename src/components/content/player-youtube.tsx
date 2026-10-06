@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Play } from "lucide-react";
 import { rastrear } from "@/lib/rastreamento";
+import { cn } from "@/lib/utils";
 
 type Props = {
   youtubeId: string;
@@ -11,6 +12,7 @@ type Props = {
   thumbnail: string;
   /** Corta as faixas pretas laterais embutidas em algumas thumbnails. */
   thumbComFaixas?: boolean;
+  className?: string;
 };
 
 /**
@@ -25,11 +27,17 @@ export function PlayerYoutube({
   titulo,
   thumbnail,
   thumbComFaixas,
+  className,
 }: Props) {
   const [ativo, setAtivo] = useState(false);
 
   return (
-    <div className="bg-surface relative aspect-video overflow-hidden">
+    <div
+      className={cn(
+        "bg-surface relative aspect-video overflow-hidden",
+        className,
+      )}
+    >
       {ativo ? (
         <iframe
           src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&rel=0`}
@@ -52,7 +60,10 @@ export function PlayerYoutube({
             alt=""
             fill
             priority
-            sizes="(min-width: 1024px) 66vw, 100vw"
+            // A thumbnail ja vem otimizada da CDN do YouTube: passar pelo
+            // otimizador do Next so baixaria e recodificaria o mesmo JPG uma
+            // vez por largura de tela.
+            unoptimized
             className={
               thumbComFaixas ? "scale-[1.19] object-cover" : "object-cover"
             }
