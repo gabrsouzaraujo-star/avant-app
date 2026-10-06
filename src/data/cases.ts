@@ -410,10 +410,12 @@ export const cases: Case[] = [
     descricao:
       "Academia de artes marciais e MMA com estrutura completa: octógono, ringue oficial, tatame de competição, área de musculação e loja. A rede opera no Brasil e na Suíça.",
     capa: {
-      src: "/imagens/shogun-team-2.webp",
-      alt: "Tatame amplo da Shogun Team com o octógono ao fundo",
-      largura: 800,
-      altura: 800,
+      src: "/imagens/shogun-team-logo.webp",
+      alt: "Logo da Shogun Team: samurai de elmo com o nome da equipe e três estrelas",
+      largura: 447,
+      altura: 447,
+      // Logo circular com fundo transparente: mostrar inteiro.
+      ajuste: "contain",
     },
     personalidades: [
       { nome: "Maurício “Shogun” Rua", papel: "Rosto da marca" },
@@ -423,37 +425,71 @@ export const cases: Case[] = [
     depoimentos: [],
     galeria: [
       {
-        src: "/imagens/shogun-team-1.webp",
-        alt: "Recepção da academia, com cinturões expostos e o logo Shogun Team",
-      },
-      {
-        src: "/imagens/shogun-team-3.webp",
-        alt: "Ringue oficial com o logo da equipe no centro da lona",
+        src: "/imagens/shogun-team-7.webp",
+        alt: "Sala de espera com troféus, poltronas e o brasão na parede",
       },
       {
         src: "/imagens/shogun-team-5.webp",
         alt: "Área de musculação e condicionamento, ao lado do octógono",
       },
       {
-        src: "/imagens/shogun-team-7.webp",
-        alt: "Sala de espera com troféus, poltronas e o brasão na parede",
-      },
-      {
         src: "/imagens/shogun-team-8.webp",
         alt: "Luvas de MMA e bandagens da equipe em exposição",
+      },
+      {
+        src: "/imagens/shogun-team-9.webp",
+        alt: "Camiseta pendurada na parede da academia",
       },
       {
         src: "/imagens/shogun-team-10.webp",
         alt: "Parede com camisetas de equipes e lutadores, algumas autografadas",
       },
+      {
+        // Horizontal: no celular a ultima foto ocupa a linha toda.
+        src: "/imagens/shogun-team-3.webp",
+        alt: "Ringue oficial com o logo da equipe no centro da lona",
+      },
+    ],
+    // Fotos em volta dos dois videos: duas em cada lateral e duas no meio.
+    mosaico: [
+      {
+        src: "/imagens/shogun-team-academia.webp",
+        alt: "Área de sacos de pancada com as faixas laranja e o logo Shogun Team nas paredes",
+      },
+      {
+        src: "/imagens/shogun-team-2.webp",
+        alt: "Tatame amplo com o octógono ao fundo",
+      },
+      {
+        src: "/imagens/shogun-team-equipamentos.webp",
+        alt: "Luvas, caneleiras e aparadores com a marca Shogun Team expostos na loja",
+      },
+      {
+        src: "/imagens/shogun-team-1.webp",
+        alt: "Recepção da academia, com cinturões expostos e o logo Shogun Team",
+      },
+      {
+        src: "/imagens/shogun-team-4.webp",
+        alt: "Sala de treino com a grade do octógono junto às janelas",
+      },
+      {
+        src: "/imagens/shogun-team-6.webp",
+        alt: "Ringue visto do canto, com os sacos de pancada na parede",
+      },
     ],
     equipe: [],
     apresentacoes: [
       {
-        src: "/videos/shogun-team-apresentacao.mp4",
-        poster: "/videos/shogun-team-apresentacao.webp",
-        titulo: "A academia por dentro",
-        chamada: "Um giro completo pela estrutura da unidade.",
+        src: "/videos/shogun-team-franquia.mp4",
+        poster: "/videos/shogun-team-franquia.webp",
+        titulo: "O peso de uma marca mundial",
+        chamada: "A franquia Shogun Team na sua cidade.",
+      },
+      {
+        src: "/videos/shogun-team-equipamentos.mp4",
+        poster: "/videos/shogun-team-equipamentos.webp",
+        titulo: "Equipamentos da marca",
+        chamada: "Sacos, luvas e protetores com a identidade da equipe.",
       },
     ],
   },

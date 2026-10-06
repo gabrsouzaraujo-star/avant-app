@@ -20,7 +20,12 @@ export function Galeria({ fotos, titulo }: Props) {
           {titulo}
         </h2>
 
-        <ul className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
+        {/*
+          No celular sao duas colunas e a primeira foto ocupa a linha toda.
+          Se sobrar uma foto sozinha no fim (total par), ela tambem ocupa a
+          linha inteira, em paisagem, para nao deixar buraco.
+        */}
+        <ul className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 max-md:[&>li:last-child:nth-child(even)]:col-span-2 max-md:[&>li:last-child:nth-child(even)]:aspect-video">
           {fotos.map((foto, indice) => (
             <li
               key={foto.src}
