@@ -314,10 +314,12 @@ export const cases: Case[] = [
     descricao:
       "Rede de estúdios dedicada à saúde e ao bem-estar, com aulas que fortalecem o corpo, melhoram a postura e aumentam a flexibilidade. Ambiente especializado e equipe qualificada em cada unidade.",
     capa: {
-      src: "/imagens/move-fitness-12-anos.webp",
-      alt: "Dupla com uniforme da Move Fitness na campanha de 12 anos da rede; à direita, Alexandre Pato",
-      largura: 740,
-      altura: 990,
+      src: "/imagens/move-fitness-capa.webp",
+      alt: "Alexandre Pato e o sócio da Move Fitness, de uniforme da rede, diante do símbolo amarelo da marca",
+      largura: 1024,
+      altura: 931,
+      // Recorte com fundo transparente: mostrar inteiro.
+      ajuste: "contain",
     },
     personalidades: [{ nome: "Alexandre Pato", papel: "Sócio da rede" }],
     site: "https://movefitness.com.br",
@@ -328,20 +330,74 @@ export const cases: Case[] = [
     ],
     fonteNumeros: FONTE_VIDEOS,
     depoimentos: [],
-    galeria: [],
+    // Fotos de uma unidade da rede, publicadas pela Move Fitness em 2026-03.
+    galeria: [
+      {
+        src: "/imagens/move-fitness-maquinas.webp",
+        alt: "Máquinas de musculação amarelas e pretas, com o logo Move Fitness ao fundo",
+      },
+      {
+        src: "/imagens/move-fitness-musculacao-teto.webp",
+        alt: "Área de musculação sob o teto com linhas de luz em losango",
+      },
+      {
+        src: "/imagens/move-fitness-12-anos.webp",
+        alt: "Dupla com uniforme da Move Fitness na campanha de 12 anos da rede; à direita, Alexandre Pato",
+      },
+      {
+        src: "/imagens/move-fitness-sala-escura.webp",
+        alt: "Sala de musculação com aparelhos, pilares amarelos e iluminação em linhas",
+      },
+      {
+        src: "/imagens/move-fitness-acervo.webp",
+        alt: "Vitrine do acervo de Alexandre Pato, com camisas de clubes, dentro de uma unidade",
+      },
+      {
+        // Horizontal: no celular a ultima foto ocupa a linha toda.
+        src: "/imagens/move-fitness-corredor.webp",
+        alt: "Corredor de piso de madeira ao lado da área de pesos, com as esteiras ao fundo",
+      },
+    ],
+    // Fotos em volta dos dois videos: duas em cada lateral e duas no meio.
+    mosaico: [
+      {
+        src: "/imagens/move-fitness-esteiras.webp",
+        alt: "Fileira de esteiras junto às janelas, com luzes no teto",
+      },
+      {
+        src: "/imagens/move-fitness-area-livre.webp",
+        alt: "Área de peso livre com bancos e aparelhos sobre piso emborrachado",
+      },
+      {
+        src: "/imagens/move-fitness-coqueteleiras.webp",
+        alt: "Coqueteleiras amarelas com o logo Move Fitness ao lado de um troféu",
+      },
+      {
+        src: "/imagens/move-fitness-recepcao.webp",
+        alt: "Recepção da academia, com aluna sorrindo no balcão e catracas ao fundo",
+      },
+      {
+        src: "/imagens/move-fitness-equipe.webp",
+        alt: "Integrante da equipe sorrindo diante da porta com o logo Move Fitness",
+      },
+      {
+        src: "/imagens/move-fitness-atendimento.webp",
+        alt: "Professor anotando o treino de uma aluna, com painel de Alexandre Pato ao fundo",
+      },
+    ],
     equipe: [],
     apresentacoes: [
+      {
+        src: "/videos/move-fitness-mercado.mp4",
+        poster: "/videos/move-fitness-mercado.webp",
+        titulo: "A Move por dentro",
+        chamada: "Alexandre Pato mostra a estrutura e o atendimento da rede.",
+      },
       {
         src: "/videos/move-fitness-apresentacao.mp4",
         poster: "/videos/move-fitness-apresentacao.webp",
         titulo: "A origem da rede",
         chamada: "Alexandre Pato apresenta a Move Fitness.",
-      },
-      {
-        src: "/videos/move-fitness-bastidores.mp4",
-        poster: "/videos/move-fitness-bastidores.webp",
-        titulo: "Bastidores",
-        chamada: "Conversa na sede da rede.",
       },
     ],
   },
