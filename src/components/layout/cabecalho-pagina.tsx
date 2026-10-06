@@ -32,9 +32,39 @@ export function CabecalhoPagina({
     <header
       className={cn("container-site pt-32 pb-16 lg:pt-44 lg:pb-24", className)}
     >
-      <JsonLd dados={schemaBreadcrumb(trilha)} />
+      <Migalhas trilha={trilha} />
 
-      <nav aria-label="Você está em">
+      <div className="mt-12 max-w-4xl">
+        {sobretitulo && <Sobretitulo>{sobretitulo}</Sobretitulo>}
+        <h1 className="text-h1 mt-6 font-serif font-normal text-balance">
+          {titulo}
+        </h1>
+        {descricao && (
+          <p className="text-text-muted text-lead mt-6 max-w-2xl text-pretty">
+            {descricao}
+          </p>
+        )}
+        {children && <div className="mt-10">{children}</div>}
+      </div>
+    </header>
+  );
+}
+
+/**
+ * Breadcrumb visivel + BreadcrumbList em JSON-LD. Os dois saem da mesma
+ * `trilha`, entao nunca divergem.
+ */
+export function Migalhas({
+  trilha,
+  className,
+}: {
+  trilha: Migalha[];
+  className?: string;
+}) {
+  return (
+    <>
+      <JsonLd dados={schemaBreadcrumb(trilha)} />
+      <nav aria-label="Você está em" className={className}>
         <ol className="text-text-muted flex flex-wrap items-center gap-1 text-sm">
           <li>
             <Link href="/" className="hover:text-text">
@@ -60,19 +90,6 @@ export function CabecalhoPagina({
           })}
         </ol>
       </nav>
-
-      <div className="mt-12 max-w-4xl">
-        {sobretitulo && <Sobretitulo>{sobretitulo}</Sobretitulo>}
-        <h1 className="text-h1 mt-6 font-serif font-normal text-balance">
-          {titulo}
-        </h1>
-        {descricao && (
-          <p className="text-text-muted text-lead mt-6 max-w-2xl text-pretty">
-            {descricao}
-          </p>
-        )}
-        {children && <div className="mt-10">{children}</div>}
-      </div>
-    </header>
+    </>
   );
 }
