@@ -409,7 +409,7 @@ function Botao({
       className={cn(
         "grid h-10 w-10 place-items-center rounded-full border backdrop-blur-sm transition-colors",
         aceso
-          ? "bg-brand text-brand-foreground border-transparent"
+          ? "bg-brand text-brand-contrast border-transparent"
           : "border-white/25 bg-black/40 text-white hover:border-white/60",
       )}
     >
