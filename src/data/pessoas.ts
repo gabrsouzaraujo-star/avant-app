@@ -1,40 +1,46 @@
 /**
- * Quem faz a AVANT, e depoimentos sobre ela.
+ * Quem conduz a AVANT, e depoimentos sobre ela.
  *
- * Procedencia:
- * - Lucas Camargo: card "Os especialistas por tras da MedInfuse" publicado
- *   pelo cliente em 06/07/2026 e descricoes do AvantCast.
- * - Ener Komagata: descricao do corte "Voce so entende quando esta do outro
- *   lado" no canal do AvantCast (2023-12-20).
+ * Procedencia: card "Os especialistas por tras da MedInfuse" publicado pelo
+ * cliente em 06/07/2026 e descricoes dos videos do AvantCast.
  */
 
-import type { Depoimento, Pessoa } from "@/data/cases";
+import type { Depoimento } from "@/data/cases";
 
-export const lideranca: (Pessoa & {
-  credenciais?: string[];
-  /** So vai para a tela depois de confirmado pelo cliente. */
-  credenciaisConfirmadas?: boolean;
-})[] = [
-  {
-    nome: "Lucas Camargo",
-    papel: "Sócio-fundador",
-    bio: "Fundou a Avant em 2010 e conduz a estratégia de formatação e expansão das marcas atendidas. Também é diretor de franquias da MedInfuse.",
-    foto: "/imagens/medinfuse-lucas-camargo.webp",
-    // TODO(cliente): confirmar estes numeros antes de publicar. Sao da
-    // trajetoria pessoal dele (nao da AVANT) e vieram de material da MedInfuse.
-    credenciais: [
-      "Mais de 15 anos no setor de franquias",
-      "Mais de 200 marcas desenvolvidas",
-      "2.000 unidades comercializadas em quatro países",
-    ],
-    credenciaisConfirmadas: false,
-  },
-  {
-    nome: "Ener Komagata",
-    papel: "Sócio",
-    bio: "Franqueador da Sushiaki e franqueado da Chinainbox — conhece por dentro os dois lados de uma rede.",
-  },
-];
+export const fundador = {
+  nome: "Lucas Camargo",
+  papel: "Sócio-fundador",
+  bio: "Fundou a Avant em 2010 e conduz a estratégia de formatação e expansão das marcas atendidas. Também é diretor de franquias da MedInfuse.",
+  foto: "/imagens/abertura-lucas-camargo.webp",
+  fotoAlt:
+    "Lucas Camargo, sócio-fundador da Avant, diante de um mural de fotos com empresários e marcas da rede",
+  /** Frentes de atuacao — todas documentadas em material do cliente. */
+  frentes: [
+    {
+      titulo: "Fundador da Avant",
+      texto: "À frente da consultoria desde 2010, só em franchising.",
+    },
+    {
+      titulo: "Diretor de franquias da MedInfuse",
+      texto: "Lidera a estratégia de crescimento e expansão nacional da rede.",
+      caseSlug: "medinfuse",
+    },
+    {
+      titulo: "Voz do AvantCast",
+      texto:
+        "Conversa sobre formatação, expansão e gestão de redes no podcast da Avant.",
+      href: "/conteudos",
+    },
+  ],
+  // TODO(cliente): confirmar estes numeros antes de publicar. Sao da
+  // trajetoria pessoal dele (nao da AVANT) e vieram de material da MedInfuse.
+  credenciais: [
+    "Mais de 15 anos no setor de franquias",
+    "Mais de 200 marcas desenvolvidas",
+    "2.000 unidades comercializadas em quatro países",
+  ],
+  credenciaisConfirmadas: false,
+};
 
 /**
  * Depoimentos sobre a AVANT.

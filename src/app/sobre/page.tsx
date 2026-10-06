@@ -1,11 +1,10 @@
-import Image from "next/image";
 import { CabecalhoPagina } from "@/components/layout/cabecalho-pagina";
 import { CtaFinal } from "@/components/sections/cta-final";
+import { Fundador } from "@/components/sections/fundador";
 import { Numeros } from "@/components/sections/numeros";
 import { Pilares } from "@/components/sections/pilares";
 import { Revelar } from "@/components/ui/revelar";
 import { TituloSecao } from "@/components/ui/titulo-secao";
-import { lideranca } from "@/data/pessoas";
 import { site } from "@/data/site";
 import { criarMetadata } from "@/lib/seo";
 
@@ -77,64 +76,7 @@ export default function SobrePage() {
         </div>
       </section>
 
-      <section aria-labelledby="lideranca-titulo" className="secao-clara secao">
-        <div className="container-site">
-          <TituloSecao
-            id="lideranca-titulo"
-            sobretitulo="Liderança"
-            titulo="Quem conduz a Avant."
-          />
-
-          <ul className="mt-14 grid gap-14 lg:grid-cols-2">
-            {lideranca.map((pessoa) => (
-              <li
-                key={pessoa.nome}
-                className="grid gap-8 sm:grid-cols-[minmax(0,14rem)_1fr]"
-              >
-                {pessoa.foto ? (
-                  <div className="bg-surface relative aspect-[3/4] overflow-hidden">
-                    <Image
-                      src={pessoa.foto}
-                      alt={`Retrato de ${pessoa.nome}`}
-                      fill
-                      sizes="(min-width: 640px) 14rem, 100vw"
-                      className="object-cover"
-                    />
-                  </div>
-                ) : (
-                  // TODO(cliente): retrato de Ener Komagata.
-                  <div
-                    aria-hidden="true"
-                    className="bg-surface hidden aspect-[3/4] sm:block"
-                  />
-                )}
-                <div>
-                  <p className="font-serif text-4xl">{pessoa.nome}</p>
-                  <p className="text-brand-text mt-2 text-xs font-semibold tracking-[0.16em] uppercase">
-                    {pessoa.papel}
-                  </p>
-                  <p className="text-text-muted mt-5 leading-relaxed">
-                    {pessoa.bio}
-                  </p>
-                  {pessoa.credenciaisConfirmadas && pessoa.credenciais && (
-                    <ul className="mt-6 space-y-2 text-sm">
-                      {pessoa.credenciais.map((credencial) => (
-                        <li key={credencial} className="flex gap-3">
-                          <span
-                            aria-hidden="true"
-                            className="bg-brand mt-2.5 h-px w-3 shrink-0"
-                          />
-                          {credencial}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <Fundador />
 
       <Pilares />
 

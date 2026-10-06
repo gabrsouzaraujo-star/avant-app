@@ -171,3 +171,14 @@ export function marcasPublicadas(categoria?: Categoria) {
     (marca) => marca.publicar && (!categoria || marca.categoria === categoria),
   );
 }
+
+/**
+ * Fotos de fundo da secao Ecossistema: bastidores da Avant com as redes,
+ * enviadas pelo cliente. Sao decorativas (nao afirmam relacao comercial com
+ * nenhuma marca que apareca nelas) e ja estao recortadas em quadrado.
+ */
+export const fotosEcossistema = Array.from(
+  { length: 20 },
+  (_, indice) =>
+    `/imagens/ecossistema-${String(indice + 1).padStart(2, "0")}.webp`,
+);

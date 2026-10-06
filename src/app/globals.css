@@ -146,3 +146,13 @@
     }
   }
 }
+
+/*
+ * Esteira infinita: a faixa tem o conteudo duplicado, entao andar metade da
+ * largura devolve exatamente ao quadro inicial, sem salto visivel.
+ */
+@keyframes esteira {
+  to {
+    transform: translateX(-50%);
+  }
+}

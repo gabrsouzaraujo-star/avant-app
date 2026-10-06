@@ -196,7 +196,7 @@ manual de marca.
 | 10  | Se a análise de franqueabilidade continua gratuita                                      | `diagnostico/page.tsx`                              |
 | 11  | Validação jurídica da política de privacidade                                           | `politica-de-privacidade/page.tsx`                  |
 | 12  | Escopo real de cada serviço e se há método oficial                                      | `servicos.ts`, `metodo.ts`                          |
-| 13  | Retrato de Ener Komagata e LinkedIn da empresa                                          | `pessoas.ts`, `site.ts`                             |
+| 13  | LinkedIn da empresa                                                                     | `site.ts`                                           |
 | 14  | Laranja `#FD9400` do logo atual × dourado `#DA8E1D` do site                             | `globals.css`                                       |
 
 ## Mídia
