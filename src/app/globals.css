@@ -87,6 +87,19 @@
   color: var(--color-text);
 }
 
+/* Bloco dourado: o mesmo truque da `.secao-clara`, com o fundo da marca.
+   Texto escuro com contraste AA sobre o dourado. */
+.secao-dourada {
+  --color-background: #da8e1d;
+  --color-surface: #c9811a;
+  --color-text: #0b0b0c;
+  --color-text-muted: #3d2a0c;
+  --color-border: rgb(11 11 12 / 0.22);
+  --color-brand-text: #0b0b0c;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
 /* Container padrao do site: 1240px de conteudo e calha lateral fluida. */
 @utility container-site {
   width: 100%;

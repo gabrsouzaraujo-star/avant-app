@@ -1,9 +1,8 @@
 import { CabecalhoPagina } from "@/components/layout/cabecalho-pagina";
 import { CtaFinal } from "@/components/sections/cta-final";
 import { Metodo } from "@/components/sections/metodo";
-import { Revelar } from "@/components/ui/revelar";
+import { PilaresComVideo } from "@/components/sections/pilares-com-video";
 import { pilares } from "@/data/servicos";
-import { cn } from "@/lib/utils";
 import { criarMetadata } from "@/lib/seo";
 
 export const metadata = criarMetadata({
@@ -17,6 +16,7 @@ export default function ServicosPage() {
   return (
     <>
       <CabecalhoPagina
+        mosaico
         trilha={[{ nome: "Soluções", caminho: "/servicos" }]}
         sobretitulo="Soluções"
         titulo="Estruturar, expandir e sustentar uma rede de franquias."
@@ -41,47 +41,7 @@ export default function ServicosPage() {
         </nav>
       </CabecalhoPagina>
 
-      {pilares.map((pilar, indice) => (
-        <section
-          key={pilar.id}
-          id={pilar.id}
-          aria-labelledby={`${pilar.id}-titulo`}
-          className={cn("secao", indice === 1 && "secao-clara")}
-        >
-          <div className="container-site grid gap-12 lg:grid-cols-12">
-            <div className="lg:col-span-4">
-              <span
-                className="text-brand-text font-serif text-6xl"
-                aria-hidden="true"
-              >
-                {pilar.numero}
-              </span>
-              <h2 id={`${pilar.id}-titulo`} className="text-h1 mt-4 font-serif">
-                {pilar.titulo}
-              </h2>
-              <p className="text-text-muted mt-5 leading-relaxed">
-                {pilar.resumo}
-              </p>
-            </div>
-
-            <ul className="border-border grid border-t sm:grid-cols-2 lg:col-span-7 lg:col-start-6">
-              {pilar.servicos.map((servico, posicao) => (
-                <Revelar
-                  as="li"
-                  key={servico.nome}
-                  atraso={(posicao % 2) * 0.06}
-                  className="border-border border-b py-8 sm:odd:pr-8 sm:even:border-l sm:even:pl-8"
-                >
-                  <h3 className="text-h3 font-medium">{servico.nome}</h3>
-                  <p className="text-text-muted mt-3 text-sm leading-relaxed">
-                    {servico.descricao}
-                  </p>
-                </Revelar>
-              ))}
-            </ul>
-          </div>
-        </section>
-      ))}
+      <PilaresComVideo pilares={pilares} />
 
       <Metodo />
 

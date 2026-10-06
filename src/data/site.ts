@@ -129,3 +129,15 @@ export const videoPontoDePartida = {
   titulo: "5 erros antes de comprar uma franquia",
   chamada: "vídeo da AVANT Franchising",
 };
+
+/**
+ * Video da pagina de solucoes. Arquivo enviado pelo cliente em 2026-10-06
+ * (post de @lucas.franquias de 2026-09-29); o titulo e o texto que aparece no
+ * proprio video.
+ */
+export const videoSolucoes = {
+  src: "/videos/solucoes-lucas-camargo.mp4",
+  poster: "/videos/solucoes-lucas-camargo.webp",
+  titulo: "149 bilhões em 6 meses (ABF)",
+  chamada: "vídeo de Lucas Camargo, sócio-fundador da AVANT",
+};
