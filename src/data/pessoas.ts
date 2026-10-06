@@ -14,6 +14,10 @@ export const fundador = {
   foto: "/imagens/abertura-lucas-camargo.webp",
   fotoAlt:
     "Lucas Camargo, sócio-fundador da Avant, diante de um mural de fotos com empresários e marcas da rede",
+  /** Foto enviada pelo cliente em 2026-10-06, usada em /sobre. */
+  fotoSobre: "/imagens/sobre-lucas-camargo.webp",
+  fotoSobreAlt:
+    "Lucas Camargo, sócio-fundador da Avant, sentado numa poltrona preta, de terno escuro",
   /** Frentes de atuacao — todas documentadas em material do cliente. */
   frentes: [
     {
